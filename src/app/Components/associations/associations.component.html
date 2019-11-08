@@ -1,0 +1,19 @@
+<div class="card-container">
+  <div class="card-title">
+    <h5>Parent Term Associations</h5>
+
+  </div>
+  <ng-container>
+    <div class="card-body">
+      <ul>
+        <li *ngFor="let associatedTerm of associatedTerms">
+          <p>
+              {{categorycode}}-{{associatedTerm?.name}}
+          </p>
+        </li>
+      </ul>
+
+    </div>
+  </ng-container>
+
+</div>

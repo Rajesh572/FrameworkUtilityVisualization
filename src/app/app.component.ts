@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { SetLoaderService } from './Services/setLoader/set-loader.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,8 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'FWvisualize';
+  flag: any;
+  constructor(public setLoader: SetLoaderService){
+    this.setLoader.setLoaderFlag.subscribe(data => this.flag = data);
+  }
 }

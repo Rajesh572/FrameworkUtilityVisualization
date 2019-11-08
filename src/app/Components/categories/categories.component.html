@@ -1,0 +1,17 @@
+<div class="card-container">
+  <div class="card-title">
+    <h5 class="title">Categories</h5>
+  </div>
+  <ng-container>
+      <div class="card-body">
+          <ul class="unordered-category-list">
+            <li *ngFor="let catg of categories;let i=index" (click)=readCategory(catg,i) class="list-item">
+              <p [ngClass]="{'highlight' : selectedIndex === i}">
+                  
+              {{catg.name}}
+              </p>
+            </li>
+          </ul>
+        </div>
+  </ng-container>
+</div>

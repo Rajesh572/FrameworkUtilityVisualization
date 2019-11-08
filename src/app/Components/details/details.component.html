@@ -1,0 +1,71 @@
+<form>
+ <div class="inputfield">
+  <input type="text" name="fwcode" placeholder="Enter Framework Code" [(ngModel)]="fwcode">
+  <span style="color: red;" *ngIf="flag">Invalid Framework Id</span>
+</div>
+<div class="buttons">  
+<button class="btn btn-secondary" type="submit" (onEnter)="readFramework()" (click)="readFramework()">Submit</button>
+  <button class="btn btn-secondary" type="submit" (click)="clearFramework()">Clear</button>
+      <button class="btn btn-secondary" [disabled]="!categories || flag" (click)=publishFramework()>Publish</button>
+      <span *ngIf="publishStatus === 1">Framework Published Successfully</span>
+      <span *ngIf="publishStatus === 2">Framework Could not Be published</span>
+  
+</div>
+</form>
+
+<div class="allDetails">
+  <!--<table>
+   <tr> <th>Categories</th>
+    
+    <th>Parent Terms</th>
+    
+    <th>Sub Terms</th>
+    
+    <th>Parent Terms Associations</th>
+    
+    <th>Sub Terms Associations</th>
+    </tr>
+    <tr>
+      <td>
+          <app-categories class="details"></app-categories>
+
+      </td>
+      <td>
+          <app-terms class="details"></app-terms>
+  
+      </td>
+      <td>
+          <app-subterms class="details"></app-subterms>
+ 
+      </td>
+      <td>
+          <app-associations class="details"></app-associations>
+  
+      </td>
+      <td>
+          <app-subtermsassociation class="details"></app-subtermsassociation>
+      </td>
+    </tr>
+  </table>
+-->
+<div class="flex-wrapper-column">
+<app-categories></app-categories>
+</div>
+<div class="flex-wrapper-column">
+<app-terms ></app-terms>
+
+</div>
+<div class="flex-wrapper-column">
+<app-subterms ></app-subterms>
+
+</div>
+<div class="flex-wrapper-column">
+<app-associations></app-associations>
+
+</div>
+<div class="flex-wrapper-column">
+<app-subtermsassociation ></app-subtermsassociation>
+
+</div>
+      
+</div>
