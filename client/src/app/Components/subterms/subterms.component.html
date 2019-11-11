@@ -1,0 +1,19 @@
+<div class="card-container">
+  <div class="card-title">
+    <h5>Subterms</h5>
+
+  </div>
+  <ng-container>
+    <div class="card-body">
+      <ul>
+        <li *ngFor="let subterm of subterms;let i=index" (click)="readSubTerm(subterm,i)">
+          <p [ngClass]="{'highlight' : selectedIndex === i}">
+
+
+            {{subterm.name}} </p>
+        </li>
+      </ul>
+
+    </div>
+  </ng-container>
+</div>
