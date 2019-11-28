@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FWTermsReadService } from 'src/app/Services/FWTermsRead/fwterms-read.service';
 import { FWCatgReadService } from 'src/app/Services/FWCatgRead/fwcatg-read.service';
 import { PublishFrameworkService } from 'src/app/Services/publishFramework/publish-framework.service';
 import { SetLoaderService } from 'src/app/Services/setLoader/set-loader.service';
+import { ComponentRefService } from 'src/app/Services/ComponentRef/component-ref.service';
 
 @Component({
   selector: 'app-terms',
@@ -15,8 +16,9 @@ export class TermsComponent implements OnInit {
   terms: any;
   termcode: any;
   selectedIndex: any;
-
-  constructor(public fwCatgRead: FWCatgReadService, public fwTermRead: FWTermsReadService, public setLoader: SetLoaderService) { }
+  @Output() someEvent = new EventEmitter<string>();
+  constructor(public fwCatgRead: FWCatgReadService, public fwTermRead: FWTermsReadService, public setLoader: SetLoaderService,
+    public compRef: ComponentRefService) { }
 
   ngOnInit() {
     this.fwCatgRead.fwResponse.subscribe((data) => {
@@ -30,9 +32,11 @@ export class TermsComponent implements OnInit {
     });
   }
   readTerm(term, index) {
+    this.compRef.ref.next({comp: TermsComponent});
+    this.someEvent.next('');
     //   this.setLoader.setLoaderFlag.next(true);
     this.selectedIndex = index;
-    console.log("Selected Index", this.selectedIndex);
+    console.log('Selected Index', this.selectedIndex);
     term = ((term['identifier']).split('_'))[2];
     this.fwTermRead.readTerms(this.fwcode, this.catgCode, term).
       subscribe((data) => {

@@ -30,6 +30,7 @@ import { SubtermsassociationComponent } from './Components/subtermsassociation/s
     HttpClientModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [SubtermsComponent,SubtermsassociationComponent]
 })
 export class AppModule { }

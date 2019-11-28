@@ -1,3 +1,7 @@
+ul{
+    padding: 0;
+    text-align: center;
+}
 li{
     cursor:pointer;
     
@@ -8,4 +12,9 @@ li{
     
     font-weight: bold;
 
+}
+
+.card-body{
+    max-height: 63vh;
+    overflow-y: auto;
 }

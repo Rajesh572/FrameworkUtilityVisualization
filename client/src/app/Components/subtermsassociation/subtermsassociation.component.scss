@@ -1,5 +1,14 @@
+ul{
+    padding: 0;
+    text-align: center;
+}
 li{
     cursor: pointer;
     
     margin-bottom: 3px;
+}
+
+.card-body{
+    max-height: 63vh;
+    overflow-y: auto;
 }

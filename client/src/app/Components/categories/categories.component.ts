@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FWreadService } from 'src/app/Services/FWread/fwread.service';
 import { Config } from 'protractor';
 import { FWCatgReadService } from 'src/app/Services/FWCatgRead/fwcatg-read.service';
+import { ComponentRefService } from 'src/app/Services/ComponentRef/component-ref.service';
 
 @Component({
   selector: 'app-categories',
@@ -14,7 +15,8 @@ export class CategoriesComponent implements OnInit {
   terms: any;
   catgCode: any;
 selectedIndex: any;
-  constructor(public fwRead: FWreadService, public fwCatgRead: FWCatgReadService) { }
+@Output()someEvent = new EventEmitter<string>();
+  constructor(public fwRead: FWreadService, public fwCatgRead: FWCatgReadService, public compRef: ComponentRefService) { }
 
   ngOnInit() {
     this.fwRead.fwResponse.subscribe((data) => {
@@ -28,6 +30,8 @@ selectedIndex: any;
       });
   }
   readCategory(catg, index) {
+    this.compRef.ref.next({comp: CategoriesComponent});
+    this.someEvent.next('');
     this.selectedIndex = index;
     this.catgCode = ((catg['identifier']).split('_'))[1];
     this.fwCatgRead.readCategory(this.frameworkCode, this.catgCode).subscribe((data) => {

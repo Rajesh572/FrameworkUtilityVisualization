@@ -9,12 +9,13 @@ import { FWTermsReadService } from 'src/app/Services/FWTermsRead/fwterms-read.se
 export class SubtermsassociationComponent implements OnInit {
   subtermsAssociations: any;
   categorycode: any;
-
+  subtermshierachicalData = [];
+  currentIndex = 0;
   constructor(public fwTermRead: FWTermsReadService) { }
 
   ngOnInit() {
     this.fwTermRead.fwSubTermBody.subscribe((data) => {
-      if (data['associations']) {
+      if (data['associations'] && data['associations'].length > 0) {
         this.categorycode = data['identifier'];
         this.categorycode = this.categorycode.split('_');
         this.categorycode = this.categorycode[1];
@@ -28,6 +29,14 @@ export class SubtermsassociationComponent implements OnInit {
         this.subtermsAssociations = [];
       }
     });
+    if (this.subtermshierachicalData.length > 0) {
+      for ( let i = 0; i < this.subtermshierachicalData.length; i++) {
+        this.categorycode = this.subtermshierachicalData[i]['identifier'];
+        this.categorycode = this.categorycode.split('_');
+        this.subtermshierachicalData[i]['category'] = this.categorycode[1];
+      }
+    }
+  console.log('subtermshierachicalData array', this.subtermshierachicalData);
   }
 
 }

@@ -49,23 +49,24 @@
   </table>
 -->
 <div class="flex-wrapper-column">
-<app-categories></app-categories>
+<app-categories (someEvent)="clearComponents($event)"></app-categories>
 </div>
 <div class="flex-wrapper-column">
-<app-terms ></app-terms>
+<app-terms (someEvent)="clearComponents($event)"></app-terms>
 
 </div>
 <div class="flex-wrapper-column">
-<app-subterms ></app-subterms>
+  <app-subterms [subterms]="subterms"></app-subterms>
 
+</div>  
+  <ng-template  #container></ng-template>
+  
+<div class="flex-wrapper-column">
+  <app-associations></app-associations>
 </div>
 <div class="flex-wrapper-column">
-<app-associations></app-associations>
 
-</div>
-<div class="flex-wrapper-column">
 <app-subtermsassociation ></app-subtermsassociation>
-
 </div>
-      
+<ng-template #container2></ng-template>
 </div>
