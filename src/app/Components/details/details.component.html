@@ -10,9 +10,10 @@
 <button class="btn btn-secondary" type="submit" (click)="downloadExcel()">Download</button>
   
 
-      <button class="btn btn-secondary" [disabled]="!categories || flag" (click)=publishFramework()>Publish</button>
+      <button class="btn btn-secondary"  (click)=publishFramework()>Publish</button>
       <span *ngIf="publishStatus === 1">Framework Published Successfully</span>
-      <span *ngIf="publishStatus === 2">Framework Could not Be published</span>
+      <span style="color: red;" *ngIf="publishStatus === 2">Framework Could not Be published</span>
+      <span style="color: red;" *ngIf="publishStatus === 3">Enter framework Code</span>
       
   <!-- <div class="example-box" cdkDrag (dragEnd)="drop($event, 'hello drag event')">
     <i class="fa fa-trash" aria-hidden="true"></i>

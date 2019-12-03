@@ -104,6 +104,10 @@ export class DetailsComponent implements OnInit {
     });
   }
   publishFramework() {
+    if (this.fwcode === '' || this.fwcode === undefined) {
+          this.publishStatus = 3;
+          return;
+    }
     this.fwPublishService.publishFramework(this.fwcode).subscribe((res) => {
       console.log('publish status', res.status);
        if (res.status === 'successful') {
@@ -171,10 +175,12 @@ this.clearComponents('clearall');
   }
   downloadExcel() {
     console.log(this.fwcode);
-    this.exportExcel.exportExcel(this.fwcode).subscribe((res) => {
-       console.log('Response', res);
-       const blob = new Blob([(res.file)], { type: 'data:application/vnd.ms-excel' });
-        const downloadUrl = URL.createObjectURL(blob);
+    this.exportExcel.exportExcel(this.fwcode).subscribe(
+      (res) => {
+        const binaryData = [];
+        binaryData.push(res);
+        const blob = new Blob((binaryData), { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+         const downloadUrl = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = downloadUrl;
         a.download = 'demo.xlsx';
@@ -182,8 +188,10 @@ this.clearComponents('clearall');
         a.click();
     },
     (error) => {
-      console.log('Inside error', error);
-      const blob = new Blob([(error.body)], { type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const binaryData = [];
+      binaryData.push(error.error.text);
+      console.log('Inside error', error.error.text);
+      const blob = new Blob((binaryData), { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
         const downloadUrl = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = downloadUrl;
@@ -210,13 +218,15 @@ this.clearComponents('clearall');
   }
 
   update(): void {
-      const dialogRef = this.dialog.open(ModalComponent, {
-        width: '450px',
-        data: { action : 'update'}
-      });
-      dialogRef.afterClosed().subscribe(result => {
-        console.log('The dialog was closed');
-      });
+    const dialogRef = this.dialog.open(ModalComponent, {
+      width: '450px',
+      data: { action : 'update'}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+
+    });
   }
    s2ab(s) {
     var buf = new ArrayBuffer(s.length);
