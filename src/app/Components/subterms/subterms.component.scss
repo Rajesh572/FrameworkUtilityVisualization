@@ -1,0 +1,23 @@
+ul{
+    padding: 0;
+    text-align: center;
+}
+li{
+    cursor:pointer;
+    
+    margin-bottom: 3px;
+}
+
+.highlight{
+    
+    font-weight: bold;
+
+}
+.card-container{
+    min-width: 35vh;
+}
+
+.card-body{
+    max-height: 63vh;
+    overflow-y: auto;
+}

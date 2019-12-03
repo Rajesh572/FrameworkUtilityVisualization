@@ -1,0 +1,17 @@
+<div mat-dialog-content>
+  <p>Please Enter the following details</p>
+   <form>
+     <div class="inputfields">
+        <p><input type="text" name="fwname" placeholder="Enter Framework Name" [(ngModel)]="name"></p>
+        <p><input type="text" name="fwcode" placeholder="Enter Framework Code" [(ngModel)]="code"></p>
+        <p><input type="text" name="fwdesc" placeholder="Enter Framework Description" [(ngModel)]="description"></p>
+        <p><input type="text" name="fwchannel" placeholder="Enter Channel Id" [(ngModel)]="channel"></p>
+      
+     </div>
+    </form> 
+   <input type="file" name="myfile" id='myUploadInput' (change)="handleUpload($event)"/>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button [mat-dialog-close]="data.action" (click)="sendReq()" cdkFocusInitial>Confirm</button>
+</div>

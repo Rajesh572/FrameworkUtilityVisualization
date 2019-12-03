@@ -1,0 +1,18 @@
+{
+    "/downloadExcel": {
+        "source": false,
+        "changeOrigin": true,
+        "target": "http://3.136.106.25:9000"
+    },
+    
+    "/framework/publish": {
+            "source": false,
+            "changeOrigin": true,
+            "target": "http://3.136.106.25:9000"
+        },
+    "/createOrUpdateFramework": {
+        "source": false,
+        "changeOrigin": true,
+        "target": "http://3.136.106.25:9000"
+    }
+}

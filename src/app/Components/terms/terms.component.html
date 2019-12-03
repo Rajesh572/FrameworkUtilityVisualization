@@ -1,0 +1,21 @@
+<div class="card-container">
+  <div class="card-title">
+    <h5>Parent Terms</h5>
+
+  </div>
+  <ng-container>
+    <div class="card-body">
+      <ul>
+        <li *ngFor="let term of terms;trackBy: trackByFunction;let i = index" (click)=readTerm(term,i) (dblclick)=deleteTerm(term)>
+
+          <p [ngClass]="{'highlight' : (selectedIndex == i)}">
+
+
+            {{term.name}} </p>
+
+        </li>
+      </ul>
+
+    </div>
+  </ng-container>
+</div>

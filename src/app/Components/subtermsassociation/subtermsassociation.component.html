@@ -1,0 +1,27 @@
+<div class="flex-wrapper-column">
+<div class="card-container">
+   <div class="card-title">
+      <h5>Sub Term Associations-{{currentIndex+1}}</h5>
+
+   </div>
+   <ng-container>
+      <div class="card-body">
+         <ul *ngIf="subtermshierachicalData.length === 0">
+            <li *ngFor="let subTermAssociation of subtermsAssociations">
+               <p>
+               {{subTermAssociation?.category}}-{{subTermAssociation?.name}}
+               </p>
+            </li>
+         </ul>
+         <ul *ngIf="subtermshierachicalData.length > 0">
+            <li *ngFor="let subTermAssociation of subtermshierachicalData">
+               <p>
+               {{subTermAssociation?.category}}-{{subTermAssociation?.name}}
+               </p>
+            </li>
+         </ul>
+
+      </div>
+   </ng-container>
+</div>
+</div>
