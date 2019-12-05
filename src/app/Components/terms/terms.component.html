@@ -5,10 +5,10 @@
   </div>
   <ng-container>
     <div class="card-body">
-      <ul>
-        <li *ngFor="let term of terms;trackBy: trackByFunction;let i = index" (click)=readTerm(term,i) (dblclick)=deleteTerm(term)>
+      <ul >
+        <li *ngFor="let term of terms;let i = index" (click)=readTerm(term,i) mwlDraggable (dragEnd)="dragEnd($event,term)">
 
-          <p [ngClass]="{'highlight' : (selectedIndex == i)}">
+          <p *ngIf="flag === true" [ngClass]="{'highlight' : (selectedIndex == i)}">
 
 
             {{term.name}} </p>

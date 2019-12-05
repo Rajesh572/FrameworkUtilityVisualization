@@ -18,6 +18,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ModalComponent } from './Components/modal/modal.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
+import { DragAndDropModule } from 'angular-draggable-droppable';
 @NgModule({
   declarations: [
     AppComponent,
@@ -39,7 +40,8 @@ import {MatButtonModule} from '@angular/material/button';
     AngularFontAwesomeModule,
     DragDropModule,
     MatDialogModule,
-    MatButtonModule
+    MatButtonModule,
+    DragAndDropModule
   ],
   providers: [],
   bootstrap: [AppComponent],

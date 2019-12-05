@@ -9,6 +9,8 @@ import { ComponentRefService } from 'src/app/Services/ComponentRef/component-ref
 import { DownloadExcelService } from 'src/app/Services/DownloadExcel/download-excel.service';
 import {MatDialog} from '@angular/material/dialog';
 import { ModalComponent } from '../modal/modal.component';
+import { DragAndDropModule, DropEvent } from 'angular-draggable-droppable';
+import { DeleteDataService } from 'src/app/Services/deleteData/delete-data.service';
 export interface DialogData {
   action: string;
 }
@@ -39,7 +41,7 @@ export class DetailsComponent implements OnInit {
     public fwTermService: FWTermsReadService, public fwPublishService: PublishFrameworkService,
     public setLoader: SetLoaderService, public numberOfDivs: SetNumberOfDivsService,
     public componentFactoryResolver: ComponentFactoryResolver, public compRef: ComponentRefService,
-    public exportExcel: DownloadExcelService, public dialog: MatDialog) {
+    public exportExcel: DownloadExcelService, public dialog: MatDialog, public todeleteData: DeleteDataService) {
 
       console.log('constructor ', this.componentsOfSubterms);
      }
@@ -82,13 +84,19 @@ export class DetailsComponent implements OnInit {
   /* }); */
 
   readFramework() {
+    this.setLoader.setLoaderFlag.next(true);
     this.clearFramework();
     console.log(this.fwcode);
     // this.setLoader.setLoaderFlag.next(true);
     this.fwreadService.readFramework(this.fwcode).subscribe((data) => {
       //   this.setLoader.setLoaderFlag.next(false);
       this.categories = data['result'].framework.categories;
-      this.fwreadService.fwResponse.next({ frameworkCode: this.fwcode, fwReadBody: this.categories });
+      if (this.categories.length > 0){
+        this.fwreadService.fwResponse.next({ frameworkCode: this.fwcode, fwReadBody: this.categories });
+
+      } else{
+           this.setLoader.setLoaderFlag.next(false);
+      }
     },
       (error) => {
         this.error = error;
@@ -109,6 +117,10 @@ export class DetailsComponent implements OnInit {
           return;
     }
     this.fwPublishService.publishFramework(this.fwcode).subscribe((res) => {
+      if (res === null || res === undefined) {
+        console.log('In response got ', res);
+        return;
+    }
       console.log('publish status', res.status);
        if (res.status === 'successful') {
         this.publishStatus = 1;
@@ -117,6 +129,11 @@ export class DetailsComponent implements OnInit {
       }
     }, (error) => {
       console.log('error catched ', error);
+      if (error.error.text === 'successful') {
+        this.publishStatus = 1;
+      } else {
+        this.publishStatus = 2;
+      }
     });
   }
   clearFramework() {
@@ -175,8 +192,14 @@ this.clearComponents('clearall');
   }
   downloadExcel() {
     console.log(this.fwcode);
+    this.setLoader.setLoaderFlag.next(true);
     this.exportExcel.exportExcel(this.fwcode).subscribe(
       (res) => {
+        this.setLoader.setLoaderFlag.next(false);
+        if (res === null || res === undefined) {
+          console.log('In response got ', res);
+          return;
+      }
         const binaryData = [];
         binaryData.push(res);
         const blob = new Blob((binaryData), { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
@@ -206,21 +229,17 @@ this.clearComponents('clearall');
     console.log(content);
   }
   create(): void {
-    const dialogRef = this.dialog.open(ModalComponent, {
-      width: '450px',
-      data: { action : 'create'}
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-
-    });
+    this.openModal('create');
   }
 
   update(): void {
+    this.openModal('update');
+  }
+  openModal(action) {
     const dialogRef = this.dialog.open(ModalComponent, {
       width: '450px',
-      data: { action : 'update'}
+      maxHeight: '500px',
+      data: { action : action}
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -228,10 +247,7 @@ this.clearComponents('clearall');
 
     });
   }
-   s2ab(s) {
-    var buf = new ArrayBuffer(s.length);
-    var view = new Uint8Array(buf);
-    for (var i=0; i!=s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
-    return buf;
+  onDrop({ dropData }: DropEvent<string>): void {
+     this.openModal('delete');
   }
 }

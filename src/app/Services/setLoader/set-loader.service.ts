@@ -6,7 +6,6 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class SetLoaderService {
   public setLoaderFlag = new BehaviorSubject<any>(false);
-  setLoaderFlag$ = this.setLoaderFlag.asObservable();
 
   constructor() { }
 }

@@ -1,4 +1,4 @@
-<div mat-dialog-content>
+<div *ngIf="!(data?.action === 'delete')" mat-dialog-content>
   <h4>Please Enter the following details</h4>
    <form>
      <div class="inputfields">
@@ -10,6 +10,17 @@
      </div>
     </form> 
    <input type="file" name="myfile" id='myUploadInput' (change)="handleUpload($event)"/>
+</div>
+<div *ngIf="data?.action === 'delete'" mat-dialog-content>
+  <div *ngIf="!(typeOfItem === 'category')">
+    <h5>Parent Term:</h5>
+  <p><input type="checkbox" checked disabled><label>{{nameOfItem}}</label></p>
+  <ng-container *ngFor="let child of children;let i=index">
+    <h5 *ngIf="i===0">Subterms:</h5>
+  <p><input type="checkbox" (change)="toggleEditable($event,child)"><label>{{child?.name}}</label></p>
+  </ng-container>
+  </div>
+  <p>Are you sure?</p>
 </div>
 <div class="buttons">
   <button class="cancelbtn" mat-raised-button color="primary" (click)="onNoClick()">Cancel</button>

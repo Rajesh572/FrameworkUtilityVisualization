@@ -10,10 +10,7 @@ import { SetLoaderService } from '../setLoader/set-loader.service';
 export class FWTermsReadService {
 
   public fwTermBody = new BehaviorSubject<any>('');
-  fwTermBody$ = this.fwTermBody.asObservable();
-
   public fwSubTermBody = new BehaviorSubject<any>('');
-  fwSubTermBody$ = this.fwTermBody.asObservable();
   json: any;
   constructor(public http: HttpClient) {
     this.json = jsondata['default'];

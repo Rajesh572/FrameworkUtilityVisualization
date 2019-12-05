@@ -10,6 +10,8 @@ export class AppComponent {
   title = 'FWvisualize';
   flag: any;
   constructor(public setLoader: SetLoaderService){
-    this.setLoader.setLoaderFlag.subscribe(data => this.flag = data);
+    this.setLoader.setLoaderFlag.subscribe( (data) => {
+      this.flag = data;
+    });
   }
 }

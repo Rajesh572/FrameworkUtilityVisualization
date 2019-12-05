@@ -4,6 +4,8 @@ import { FWCatgReadService } from 'src/app/Services/FWCatgRead/fwcatg-read.servi
 import { PublishFrameworkService } from 'src/app/Services/publishFramework/publish-framework.service';
 import { SetLoaderService } from 'src/app/Services/setLoader/set-loader.service';
 import { ComponentRefService } from 'src/app/Services/ComponentRef/component-ref.service';
+import { DeleteDataService } from 'src/app/Services/deleteData/delete-data.service';
+import { LiveTermsService } from 'src/app/Services/liveTerms/live-terms.service';
 
 @Component({
   selector: 'app-terms',
@@ -17,26 +19,44 @@ export class TermsComponent implements OnInit {
   termcode: any;
   selectedIndex: any;
   isSingleClick = true;
+  flag = false;
   @Output() someEvent = new EventEmitter<string>();
   constructor(public fwCatgRead: FWCatgReadService, public fwTermRead: FWTermsReadService, public setLoader: SetLoaderService,
-    public compRef: ComponentRefService) { }
+    public compRef: ComponentRefService, public todeleteData: DeleteDataService, public liveTerms: LiveTermsService) { }
 
   ngOnInit() {
     this.fwCatgRead.fwResponse.subscribe((data) => {
+      this.flag = false;
       this.fwcode = data.frameworkCode;
       this.catgCode = data.categoryCode;
       this.terms = data.fwReadBody;
       if (!!this.terms && this.terms.length > 0) {
-        this.termcode = (this.terms[0]);
-        this.readTerm(this.termcode, 0);
+        /* this.findLiveTerms((tempArray) => {
+          this.terms = [];
+          this.terms = tempArray;
+          this.flag = true;
+          this.termcode = (this.terms[0]);
+          this.readTerm(this.termcode, 0);
+        }); */
+        this.liveTerms.findLiveTerms(this.terms).
+        subscribe((res) => {
+            if (res != null && res) {
+              this.terms = [];
+              this.terms = res;
+              this.flag = true;
+          this.termcode = (this.terms[0]);
+          this.readTerm(this.termcode, 0);
+          this.setLoader.setLoaderFlag.next(false);
+            }
+        },
+        (err) => {
+console.log(err);
+        });
       }
     });
   }
   readTerm(term, index) {
-    this.isSingleClick = true;
-    setTimeout( () => {
-           if (this.isSingleClick) {
-            this.compRef.ref.next({comp: TermsComponent});
+    this.compRef.ref.next({comp: TermsComponent});
             this.someEvent.next('');
             //   this.setLoader.setLoaderFlag.next(true);
             this.selectedIndex = index;
@@ -51,17 +71,9 @@ export class TermsComponent implements OnInit {
               (error) => {
                 console.log('Error in terms component', error);
               });
-           }
-    }, 250);
   }
-  deleteTerm(term) {
-    this.isSingleClick = false;
-    console.log('To delete Term', term);
-  }
-  public trackByFunction(item, index) {
-    if (!item) {
-      return null;
-    }
-    return item['identifier'];
+  dragEnd(event, item) {
+    console.log('event' , event , item);
+    this.todeleteData.data.next({type : 'term' , item : item});
   }
 }

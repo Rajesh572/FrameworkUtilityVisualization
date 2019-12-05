@@ -20,6 +20,5 @@ export class PublishFrameworkService {
 
 
  return this.http.post<any>('/framework/publish', {framework:  fwCode, channel: this.json.channel_id}, httpOptions);
-  //  return this.http.post<any>(this.json.instance_url + this.json.framework_publish + fwCode, {}, httpOptions);
   }
 }

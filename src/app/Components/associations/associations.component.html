@@ -7,7 +7,7 @@
     <div class="card-body">
       <ul>
         <li *ngFor="let associatedTerm of associatedTerms">
-          <p>
+          <p *ngIf="flag">
              {{associatedTerm?.category}}-{{associatedTerm?.name}}
           </p>
         </li>

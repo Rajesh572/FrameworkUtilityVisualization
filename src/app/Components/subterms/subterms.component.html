@@ -8,7 +8,7 @@
   <ng-container>
     <div class="card-body">
       <ul *ngIf="subtermshierachicalData.length === 0">
-        <li *ngFor="let subterm of subterms;let i=index" (click)=readSubTerm(subterm,i) (dblclick)=deleteSubterm(subterm)>
+        <li *ngFor="let subterm of subterms;let i=index" (click)=readSubTerm(subterm,i)  mwlDraggable (dragEnd)="dragEnd($event,subterm)">
           <p [ngClass]="{'highlight' : selectedIndex === i}">
 
 
@@ -16,7 +16,7 @@
         </li>
       </ul>
       <ul *ngIf="subtermshierachicalData.length > 0">
-        <li *ngFor="let subterm of subtermshierachicalData;let i=index" (click)="readSubTerm(subterm,i)">
+        <li *ngFor="let subterm of subtermshierachicalData;let i=index" (click)="readSubTerm(subterm,i)" mwlDraggable (dragEnd)="dragEnd($event,subterm)" >
           <p [ngClass]="{'highlight' : selectedIndex === i}">
 
 
