@@ -3,12 +3,12 @@
     <h5>Parent Terms</h5>
 
   </div>
-  <ng-container>
+  <ng-container *ngIf="terms">
     <div class="card-body">
       <ul >
         <li *ngFor="let term of terms;let i = index" (click)=readTerm(term,i) mwlDraggable (dragEnd)="dragEnd($event,term)">
 
-          <p *ngIf="flag === true" [ngClass]="{'highlight' : (selectedIndex == i)}">
+          <p style="margin-top: 10px;padding-left: 10px;" *ngIf="flag === true" [ngClass]="{'highlight' : (selectedIndex == i)}">
 
 
             {{term.name}} </p>

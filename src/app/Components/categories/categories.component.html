@@ -2,11 +2,11 @@
   <div class="card-title">
     <h5 class="title">Categories</h5>
   </div>
-  <ng-container>
+  <ng-container *ngIf="categories">
       <div class="card-body" cdkDropList>
           <ul class="unordered-category-list">
             <li *ngFor="let catg of categories;let i=index" (click)=readCategory(catg,i)   class="list-item drag-active" mwlDraggable (dragEnd)="dragEnd($event,catg)">
-              <p [ngClass]="{'highlight' : selectedIndex === i}">
+              <p style="margin-top: 10px;padding-left: 10px;" [ngClass]="{'highlight' : selectedIndex === i}">
                   
               {{catg.name}}
               </p>

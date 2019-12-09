@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
+import {environment} from './../../../environments/environment';
 
 import * as jsondata from 'instanceDetails.json';
 import { SetLoaderService } from '../setLoader/set-loader.service';

@@ -48,6 +48,7 @@ export class SubtermsassociationComponent implements OnInit {
         this.categorycode = this.categorycode.split('_');
         this.subtermshierachicalData[i]['category'] = this.categorycode[1];
       }
+      this.flag = true;
     }
   console.log('subtermshierachicalData array', this.subtermshierachicalData);
   }

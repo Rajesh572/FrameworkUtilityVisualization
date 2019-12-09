@@ -5,11 +5,11 @@
     <h5>Subterms-{{currentIndex+1}}</h5>
 
   </div>
-  <ng-container>
+  <ng-container *ngIf="subterms?.length > 0 || subtermshierachicalData?.length > 0">
     <div class="card-body">
       <ul *ngIf="subtermshierachicalData.length === 0">
         <li *ngFor="let subterm of subterms;let i=index" (click)=readSubTerm(subterm,i)  mwlDraggable (dragEnd)="dragEnd($event,subterm)">
-          <p [ngClass]="{'highlight' : selectedIndex === i}">
+          <p style="margin-top: 10px;padding-left: 10px;" [ngClass]="{'highlight' : selectedIndex === i}">
 
 
             {{subterm.name}} </p>
@@ -17,7 +17,7 @@
       </ul>
       <ul *ngIf="subtermshierachicalData.length > 0">
         <li *ngFor="let subterm of subtermshierachicalData;let i=index" (click)="readSubTerm(subterm,i)" mwlDraggable (dragEnd)="dragEnd($event,subterm)" >
-          <p [ngClass]="{'highlight' : selectedIndex === i}">
+          <p style="margin-top: 10px;padding-left: 10px;" [ngClass]="{'highlight' : selectedIndex === i}">
 
 
             {{subterm.name}} </p>

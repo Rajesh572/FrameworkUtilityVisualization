@@ -38,10 +38,9 @@ export class DetailsComponent implements OnInit {
   @ViewChild('container2', {read: ViewContainerRef}) container2: ViewContainerRef;
   found = false;
   constructor(public fwreadService: FWreadService, public fwCatgService: FWCatgReadService,
-    public fwTermService: FWTermsReadService, public fwPublishService: PublishFrameworkService,
-    public setLoader: SetLoaderService, public numberOfDivs: SetNumberOfDivsService,
+    public fwTermService: FWTermsReadService, public setLoader: SetLoaderService, public numberOfDivs: SetNumberOfDivsService,
     public componentFactoryResolver: ComponentFactoryResolver, public compRef: ComponentRefService,
-    public exportExcel: DownloadExcelService, public dialog: MatDialog, public todeleteData: DeleteDataService) {
+    public dialog: MatDialog, public todeleteData: DeleteDataService) {
 
       console.log('constructor ', this.componentsOfSubterms);
      }
@@ -99,6 +98,7 @@ export class DetailsComponent implements OnInit {
       }
     },
       (error) => {
+        this.setLoader.setLoaderFlag.next(false);
         this.error = error;
         this.flag = true;
       }
@@ -112,29 +112,7 @@ export class DetailsComponent implements OnInit {
     });
   }
   publishFramework() {
-    if (this.fwcode === '' || this.fwcode === undefined) {
-          this.publishStatus = 3;
-          return;
-    }
-    this.fwPublishService.publishFramework(this.fwcode).subscribe((res) => {
-      if (res === null || res === undefined) {
-        console.log('In response got ', res);
-        return;
-    }
-      console.log('publish status', res.status);
-       if (res.status === 'successful') {
-        this.publishStatus = 1;
-      } else {
-        this.publishStatus = 2;
-      }
-    }, (error) => {
-      console.log('error catched ', error);
-      if (error.error.text === 'successful') {
-        this.publishStatus = 1;
-      } else {
-        this.publishStatus = 2;
-      }
-    });
+    this.openModal('publish');
   }
   clearFramework() {
     this.flag = false;
@@ -191,38 +169,7 @@ this.clearComponents('clearall');
 
   }
   downloadExcel() {
-    console.log(this.fwcode);
-    this.setLoader.setLoaderFlag.next(true);
-    this.exportExcel.exportExcel(this.fwcode).subscribe(
-      (res) => {
-        this.setLoader.setLoaderFlag.next(false);
-        if (res === null || res === undefined) {
-          console.log('In response got ', res);
-          return;
-      }
-        const binaryData = [];
-        binaryData.push(res);
-        const blob = new Blob((binaryData), { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-         const downloadUrl = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = downloadUrl;
-        a.download = 'demo.xlsx';
-        document.body.appendChild(a);
-        a.click();
-    },
-    (error) => {
-      const binaryData = [];
-      binaryData.push(error.error.text);
-      console.log('Inside error', error.error.text);
-      const blob = new Blob((binaryData), { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        const downloadUrl = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = downloadUrl;
-        a.download = 'demo.xlsx';
-        document.body.appendChild(a);
-        a.click();
-    });
-
+    this.openModal('download');
   }
   drag(dragEvent, content) {
     console.log(dragEvent);
@@ -235,6 +182,9 @@ this.clearComponents('clearall');
   update(): void {
     this.openModal('update');
   }
+  helpAndSupport(): void {
+    this.openModal('help');
+  }
   openModal(action) {
     const dialogRef = this.dialog.open(ModalComponent, {
       width: '450px',
@@ -242,10 +192,10 @@ this.clearComponents('clearall');
       data: { action : action}
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    /* dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
 
-    });
+    }); */
   }
   onDrop({ dropData }: DropEvent<string>): void {
      this.openModal('delete');

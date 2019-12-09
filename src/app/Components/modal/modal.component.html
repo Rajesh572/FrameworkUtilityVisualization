@@ -1,15 +1,14 @@
-<div *ngIf="!(data?.action === 'delete')" mat-dialog-content>
+<div *ngIf="(data?.action === 'create') || (data?.action === 'update')" mat-dialog-content>
   <h4>Please Enter the following details</h4>
    <form>
      <div class="inputfields">
-        <p><input class="inputfield" type="text" name="fwname" placeholder="Enter Framework Name" [(ngModel)]="name"></p>
-        <p><input class="inputfield" type="text" name="fwcode" placeholder="Enter Framework Code" [(ngModel)]="code"></p>
+        <p><input class="inputfield" type="text" name="fwname" placeholder="Enter Framework Name" [(ngModel)]="name" ></p>
+        <p><input class="inputfield" type="text" name="fwcode" placeholder="Enter Framework Code" [(ngModel)]="code" ></p>
         <p><input class="inputfield" type="text" name="fwdesc" placeholder="Enter Framework Description" [(ngModel)]="description"></p>
-        <p><input class="inputfield" type="text" name="fwchannel" placeholder="Enter Channel Id" [(ngModel)]="channel"></p>
+        <input type="file" name="myfile" id='myUploadInput' (change)="handleUpload($event)"/>
       
      </div>
     </form> 
-   <input type="file" name="myfile" id='myUploadInput' (change)="handleUpload($event)"/>
 </div>
 <div *ngIf="data?.action === 'delete'" mat-dialog-content>
   <div *ngIf="!(typeOfItem === 'category')">
@@ -17,12 +16,50 @@
   <p><input type="checkbox" checked disabled><label>{{nameOfItem}}</label></p>
   <ng-container *ngFor="let child of children;let i=index">
     <h5 *ngIf="i===0">Subterms:</h5>
-  <p><input type="checkbox" (change)="toggleEditable($event,child)"><label>{{child?.name}}</label></p>
+  <p><input type="checkbox" (change)="toggleEditable($event,child)"><label>{{child?.name}}</label>
+    <span class="subtermHierarchy" *ngIf="child?.hierarchy">
+    <i class="fa fa-sitemap" aria-hidden="true"></i>
+    <span class="tooltiptext"> Delete its subterms first</span>
+  </span></p>
   </ng-container>
   </div>
   <p>Are you sure?</p>
 </div>
-<div class="buttons">
-  <button class="cancelbtn" mat-raised-button color="primary" (click)="onNoClick()">Cancel</button>
-  <button class="confirmbtn" mat-raised-button color="primary" [mat-dialog-close]="data.action" (click)="sendReq()">Confirm</button>
+<div *ngIf="(data?.action === 'publish') || (data?.action === 'download')" mat-dialog-content>
+    <h4>Please Enter the following detail</h4>
+     <form>
+       <div class="inputfields">
+          <p><input class="inputfield" type="text" name="fwcode" placeholder="Enter Framework Code" [(ngModel)]="code" ></p>
+       </div>
+      </form> 
+  </div>
+  <div *ngIf="successRes">
+    <p>Success</p>
+  </div>
+  <div *ngIf="failureRes">
+    <p>Failure</p>
+  </div>
+  <div *ngIf="termsdeletionProcess">
+    <p>Terms deletion process completed , Please publish the framework</p>
+  </div>
+<div *ngIf="!(data?.action === 'help')" class="buttons">
+  
+    <button class="confirmbtn" mat-raised-button color="primary" (click)="sendReq()">Confirm</button>
+  <button class="cancelbtn" class="materialcustombtn" mat-raised-button  (click)="onNoClick()">Cancel</button>
+</div>
+<div *ngIf="(data?.action === 'help')">
+    <li><i class="fa fa-sitemap" aria-hidden="true"></i><span> => </span><span>Means it has child terms</span></li>
+   <p>
+    <li>First delete subterms , then parent terms</li>
+
+   </p> 
+    <p>
+      <li>Deleting a category deletes all its terms</li>
+
+    </p>
+    <p>
+      <li>Publish after each updation</li>
+
+    </p>
+    <button class="cancelbtn" class="materialcustombtn" mat-raised-button  (click)="onNoClick()">Close</button>
 </div>

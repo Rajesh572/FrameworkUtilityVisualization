@@ -3,11 +3,11 @@
     <h5>Parent Term Associations</h5>
 
   </div>
-  <ng-container>
+  <ng-container *ngIf="associatedTerms.length > 0">
     <div class="card-body">
       <ul>
         <li *ngFor="let associatedTerm of associatedTerms">
-          <p *ngIf="flag">
+          <p style="margin-top: 10px;padding-left: 10px;" *ngIf="flag">
              {{associatedTerm?.category}}-{{associatedTerm?.name}}
           </p>
         </li>

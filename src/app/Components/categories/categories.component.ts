@@ -4,6 +4,7 @@ import { Config } from 'protractor';
 import { FWCatgReadService } from 'src/app/Services/FWCatgRead/fwcatg-read.service';
 import { ComponentRefService } from 'src/app/Services/ComponentRef/component-ref.service';
 import { DeleteDataService } from 'src/app/Services/deleteData/delete-data.service';
+import { SetLoaderService } from 'src/app/Services/setLoader/set-loader.service';
 
 @Component({
   selector: 'app-categories',
@@ -17,9 +18,10 @@ export class CategoriesComponent implements OnInit {
   catgCode: any;
   isSingleClick = true;
 selectedIndex: any;
+flag = true;
 @Output()someEvent = new EventEmitter<string>();
   constructor(public fwRead: FWreadService, public fwCatgRead: FWCatgReadService, public compRef: ComponentRefService,
-    public todeleteData: DeleteDataService) { }
+    public todeleteData: DeleteDataService, public setLoader: SetLoaderService) { }
 
   ngOnInit() {
     this.fwRead.fwResponse.subscribe((data) => {
@@ -36,9 +38,13 @@ selectedIndex: any;
     this.compRef.ref.next({comp: CategoriesComponent});
       this.someEvent.next('');
       this.selectedIndex = index;
+      if (!this.flag) {
+        this.setLoader.setLoaderFlag.next(true);
+      }
       this.catgCode = ((catg['identifier']).split('_'))[1];
       this.fwCatgRead.readCategory(this.frameworkCode, this.catgCode).subscribe((data) => {
   console.log(data['result'].category.terms);
+  this.flag = false;
   if (data['result'].category.terms.length > 0) {
   this.fwCatgRead.fwResponse.next({frameworkCode: this.frameworkCode, categoryCode: this.catgCode,
     fwReadBody: data['result'].category.terms});

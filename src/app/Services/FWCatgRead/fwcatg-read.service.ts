@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-
+import {environment} from './../../../environments/environment';
 import * as jsondata from 'instanceDetails.json';
 import { FWTermsReadService } from '../FWTermsRead/fwterms-read.service';
 @Injectable({

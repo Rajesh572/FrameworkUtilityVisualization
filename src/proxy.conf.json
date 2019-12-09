@@ -2,27 +2,27 @@
     "/downloadExcel": {
         "source": false,
         "changeOrigin": true,
-        "target": "http://18.222.92.103:9000"
+        "target": "http://localhost:9000"
     },
     
     "/framework/publish": {
             "source": false,
             "changeOrigin": true,
-            "target": "http://18.222.92.103:9000"
+            "target": "http://localhost:9000"
         },
     "/createOrUpdateFramework": {
         "source": false,
         "changeOrigin": true,
-        "target": "http://18.222.92.103:9000"
+        "target": "http://localhost:9000"
     },
     "/deleteItem": {
         "source": false,
         "changeOrigin": true,
-        "target": "http://18.222.92.103:9000"
+        "target": "http://localhost:9000"
     },
     "/getLiveTerms": {
         "source": false,
         "changeOrigin": true,
-        "target":"http://18.222.92.103:9000"
+        "target":"http://localhost:9000"
     }
 }

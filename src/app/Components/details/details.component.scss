@@ -1,16 +1,14 @@
-.form-container {
-    display: inline-block;
-    min-width: 100%;
-    padding-right: 20px;
-}
 form{
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding-top: 27px;
+    margin-left: 4vw;
 }
 input{
-    border: none;
-    border-bottom: 1px solid lightgray;
-    padding-top: 0.8rem;
+    border: 1px solid lightgray;
+    border-radius: 18px;
+    width: 36vw;
+    height: 6vh;
+    padding-left: 14px;
+    margin-right: 3rem;
 }
 textarea:focus, input:focus{
     outline: none;
@@ -19,22 +17,32 @@ textarea:focus, input:focus{
 .allDetails{
     display: flex;
     overflow-x: auto;
-    min-height: 77vh;
+    min-height: 73.57%;
+    padding-top: 10px;
+    background-color: #dadfff;
+    
     .flex-wrapper-column {
         flex: 1;
-        min-height: 40vh;
+        min-height: 38vh;
         padding: 0 4px;
 
         ::ng-deep .card-container {
             max-width: 45vh;
             min-width: 35vh;
     border-radius: 8px;
-            background-color: #ebecf0;
+            background-color: white;
+            margin-left: 6px;
             .card-title {
-                margin-bottom: 10px;
-                border-bottom: 1px solid lightgray;
+                margin-bottom: 0;
+                padding: 0.5em;
+                border-radius: 8px;
+                background-color: #ffe7c4;
+                h5{
+                    font-family: 'Times New Roman', Times, serif;
+                }
             }
         }
+        
     }
     
 }
@@ -42,16 +50,21 @@ textarea:focus, input:focus{
     display: flex;
    ::ng-deep .flex-wrapper-column {
         flex: 1;
-        min-height: 40vh;
-        padding: 0 4px;
+        min-height: 38vh;
+        padding: 0 0;
 
         ::ng-deep .card-container {
             max-width: 40vh;
     border-radius: 8px;
-            background-color: #ebecf0;
+            background-color: white;
             .card-title {
-                margin-bottom: 10px;
-                border-bottom: 1px solid lightgray;
+                padding: 0.5em;
+                background-color: #ffe7c4;
+                border-radius: 8px;
+                margin-bottom: 0;
+                h5{
+                    font-family: 'Times New Roman', Times, serif;
+                }
             }
         }
     }
@@ -65,8 +78,8 @@ textarea:focus, input:focus{
     padding-left: 6rem;
 }
 .inputfield{
-    margin-left : 12px;
-    padding-right: 50px;
+    margin-left : 24px;
+    padding-right: 60px;
 }
 .inputText{
     margin-right: 12px;
@@ -93,17 +106,17 @@ table, th, td {
     border-collapse: collapse;
   }
   .example-box {
-    width: 50px;
-    height: 50px;
-    float: right;
-    border: solid 1px #ccc;
+    width: 100%;
+    height: 68px;
+    padding-right: 75px;
+    background-color: white;
+    border: dotted 4px #b9b9b9;
     color: rgba(0, 0, 0, 0.87);
-    cursor: move;
     display: flex;
+    margin: 10px;
     justify-content: center;
     align-items: center;
     text-align: center;
-    background: #fff;
     border-radius: 4px;
     position: relative;
     z-index: 1;
@@ -111,6 +124,9 @@ table, th, td {
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
                 0 2px 2px 0 rgba(0, 0, 0, 0.14),
                 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+  }
+  .example-box:hover{
+      cursor: default;
   }
   
   .example-box:active {
@@ -126,29 +142,31 @@ table, th, td {
         color:transparent;
     }
   }
-  
+ button.retrieve,button.clear{
+    color: white;
+    border-radius: 23px;
+  }
+  button.retrieve{
+      
+    background-color: #9D7CF3;
+    margin-right: 1rem;
+  }
+  button.clear{
+ background-color:#aba8a8
+  }
   .btn {
-    border: 2px solid gray;
-    color: gray;
-    background-color: white;
-    padding: 8px 20px;
-    border-radius: 8px;
-    font-size: 20px;
-    font-weight: bold;
+    color: #8c8a8a;
+    font-size: 15px;
   }
-  button.cstmbtn{
-    border: 2px solid gray;
-    color: gray;
-    background-color: white;
-    padding: 8px 20px;
-    border-radius: 8px;
-    float: none;
-    font-size: 20px;
-    position: absolute;
-    right: 0;
-    bottom: 21px;
-    font-weight: bold;
+  
+  button.btn:hover{
+      cursor: pointer;
   }
+  button.sidebarbtn:hover{
+    background-color: #fbf5f3;
+    color: #333;
+  }
+  
   span.cstmbtn{
     position: absolute;
     right: 10rem;
@@ -185,3 +203,58 @@ table, th, td {
     bottom: auto;
     right: 128%;
   }
+  .sidebar{
+      float: left;
+      max-width: 95px;
+      min-width: 95px;
+      background-color: #9D7CF3;
+      min-height: 100%;
+  }
+button.sidebarbtn{
+    padding: 0;
+    margin: 0 0 2.5rem 0;
+    background-color: transparent;
+    border: none;
+    width: 100%;
+    color : white;
+}
+.utilitylogo{
+    text-align: center;
+    min-height: 5rem;
+    color: white;
+    margin-top: 20px;
+}
+.utilityfirstname{
+    font-size: 32px;
+    font-weight: bold;
+}
+.droparea{
+    min-height: 86px;
+    max-height: 86px;
+    display: flex;
+    background-color: #dadfff;
+}
+.inputbar{
+    display: flex;
+    min-height: 13.5%;
+}
+::-webkit-scrollbar {
+ 
+    height: 6px;
+    width: 10px;
+    background:white;
+
+}
+
+::-webkit-scrollbar-thumb {
+    background-color:grey;
+}
+i{
+    font-size: 1.6rem;
+}
+p.dragText{
+    margin: 0;
+    color: grey;
+    font-size: larger;
+    margin-right: 15px;
+}

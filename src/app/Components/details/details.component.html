@@ -1,58 +1,56 @@
-<div class="form-container">
+
+<div class="sidebar">
+  <div class="utilitylogo">
+   
+  <span class="utilityfirstname">SB</span><span class="utilitylastname">FW</span>
+  </div> 
+  <button class="sidebarbtn" (click)="create()"><i class="fa fa-plus" aria-hidden="true"></i><p>Create</p></button>
+  <button class="sidebarbtn" (click)="update()"><i class="fa fa-refresh" aria-hidden="true"></i><p>Update</p></button>
+  <button class="sidebarbtn" (click)=publishFramework()><i class="fa fa-rocket" aria-hidden="true"></i><p>Publish</p></button>
+  <button class="sidebarbtn" type="submit" (click)="downloadExcel()"><i class="fa fa-download" aria-hidden="true"></i><p>Download</p></button>
+  
+  <button class="sidebarbtn" type="submit" (click)="helpAndSupport()"><i class="fa fa-question-circle" aria-hidden="true"></i><p>Help</p></button>
+</div>
+<div class="inputbar">
   <form>
-    <div class="div1">
-      <div class="inputfield">
+    <div class="inputfield">
         <input type="text" name="fwcode" placeholder="Enter Framework Code" [(ngModel)]="fwcode">
-        <span style="color: red;" *ngIf="flag">Invalid Framework Id</span>
+        <!-- <span style="color: red;" *ngIf="flag">Invalid Framework Id</span> -->
       </div>
       <div class="buttons">
-        <button class="btn btn-secondary" type="submit" (onEnter)="readFramework()"
+        <button class="btn retrieve" type="submit" (onEnter)="readFramework()"
           (click)="readFramework()">Retrieve</button>
-        <button class="btn btn-secondary" type="submit" (click)="downloadExcel()">Download</button>
-        <button class="btn btn-secondary" type="submit" (click)="clearFramework()">Clear</button>
+        <button class="btn clear" type="submit" (click)="clearFramework(); fwcode = ''">Clear</button>
 
-
-        <span class="cstmbtn" *ngIf="publishStatus === 1">Framework Published Successfully</span>
-        <span class="cstmbtn" style="color: red;" *ngIf="publishStatus === 2">Framework Could not Be published</span>
-        <span class="cstmbtn" style="color: red;" *ngIf="publishStatus === 3">Enter framework Code</span>
-        <button class="btn btn-secondary cstmbtn" (click)=publishFramework()>Publish</button>
-      </div>
-    </div>
-    <div class="div2">
-      <div class="upload-btn-wrapper">
-        <button class="btn" (click)="create()">Create</button>
-      </div>
-      <div class="upload-btn-wrapper">
-        <button class="btn" (click)="update()">Update</button>
-      </div>
-    </div>
-    <div class="example-box" mwlDroppable (drop)="onDrop($event)" dragOverClass="drop-over-active">
-      <span class="tooltiptext">Drag over to delete</span>
-      <i class="fa fa-trash" aria-hidden="true"></i>
-    </div>
-  </form>
+</div>
+</form>
 </div>
 <div class="allDetails">
-
-  <div class="flex-wrapper-column">
-    <app-categories (someEvent)="clearComponents($event)"></app-categories>
-  </div>
-  <div class="flex-wrapper-column">
-    <app-terms (someEvent)="clearComponents($event)"></app-terms>
-
-  </div>
-  <div class="flex-wrapper-column">
-    <app-subterms [subterms]="subterms"></app-subterms>
-
-  </div>
-  <ng-template #container></ng-template>
-
-  <div class="flex-wrapper-column">
-    <app-associations></app-associations>
-  </div>
-  <div class="flex-wrapper-column">
-
-    <app-subtermsassociation></app-subtermsassociation>
-  </div>
-  <ng-template #container2></ng-template>
+    <div class="flex-wrapper-column">
+        <app-categories (someEvent)="clearComponents($event)"></app-categories>
+      </div>
+      <div class="flex-wrapper-column">
+        <app-terms (someEvent)="clearComponents($event)"></app-terms>
+    
+      </div>
+      <div class="flex-wrapper-column">
+        <app-subterms [subterms]="subterms"></app-subterms>
+    
+      </div>
+      <ng-template #container></ng-template>
+    
+      <div class="flex-wrapper-column">
+        <app-associations></app-associations>
+      </div>
+      <div class="flex-wrapper-column">
+    
+        <app-subtermsassociation></app-subtermsassociation>
+      </div>
+      <ng-template #container2></ng-template>
+</div>
+<div class="droparea">
+    <div class="example-box" mwlDroppable (drop)="onDrop($event)" dragOverClass="drop-over-active">
+        <p class="dragText">Drag here to delete</p>
+        <i class="fa fa-trash" aria-hidden="true"></i>
+      </div>
 </div>
