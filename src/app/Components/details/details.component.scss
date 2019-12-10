@@ -1,6 +1,6 @@
 form{
     padding-top: 27px;
-    margin-left: 4vw;
+    margin-left: 8vw;
 }
 input{
     border: 1px solid lightgray;
@@ -8,7 +8,9 @@ input{
     width: 36vw;
     height: 6vh;
     padding-left: 14px;
-    margin-right: 3rem;
+}
+.fa-trash{
+    color: grey;
 }
 textarea:focus, input:focus{
     outline: none;
@@ -212,7 +214,8 @@ table, th, td {
   }
 button.sidebarbtn{
     padding: 0;
-    margin: 0 0 2.5rem 0;
+    padding-top: 9px;
+    margin: 0 0 1.2rem 0;
     background-color: transparent;
     border: none;
     width: 100%;

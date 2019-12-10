@@ -114,6 +114,9 @@ export class DetailsComponent implements OnInit {
   publishFramework() {
     this.openModal('publish');
   }
+  setDefaultFramework() {
+    this.openModal('setdefaultframework');
+  }
   clearFramework() {
     this.flag = false;
     this.publishStatus = 0;

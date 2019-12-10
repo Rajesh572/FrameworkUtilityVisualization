@@ -6,6 +6,7 @@ import { FWTermsReadService } from 'src/app/Services/FWTermsRead/fwterms-read.se
 import { PublishFrameworkService } from 'src/app/Services/publishFramework/publish-framework.service';
 import { SetLoaderService } from 'src/app/Services/setLoader/set-loader.service';
 import { DownloadExcelService } from 'src/app/Services/DownloadExcel/download-excel.service';
+import { SetDefaultService } from 'src/app/Services/setDefault/set-default.service';
 export interface DialogData {
   action: string;
 }
@@ -26,6 +27,8 @@ export class ModalComponent implements OnInit {
   children = [];
   catgCode: any;
   nameOfItem: any;
+  rootorgId: any;
+  selectedAll: any;
   subTermsToDelete = [];
   successRes = false;
   failureRes = false;
@@ -33,7 +36,8 @@ export class ModalComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<ModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData, public createupdate: CreateUpdateReqService,
     public todeleteData: DeleteDataService, public termRead: FWTermsReadService, public fwPublishService: PublishFrameworkService,
-    public setLoader: SetLoaderService, public exportExcel: DownloadExcelService) { }
+    public setLoader: SetLoaderService, public exportExcel: DownloadExcelService, 
+    public setDefault: SetDefaultService) { }
 
   ngOnInit() {
     this.todeleteData.data.subscribe((info) => {
@@ -52,16 +56,6 @@ export class ModalComponent implements OnInit {
           this.catgCode = tempArray[1];
           this.codeOfItem = tempArray[2];
           this.readSubTerms(this.fwcode, this.catgCode, this.codeOfItem);
-          /* this.termRead.readTerms(this.fwcode, this.catgCode, this.codeOfItem).subscribe((res) => {
-           console.log('Response', res['result'].term['children']);
-           const temp = res['result'].term['children'];
-           if (temp.length > 0) {
-               this.children = temp;
-           }
-          },
-          (err) => {
-            console.log('Error ', err);
-          }); */
         } else if (tempArray.length === 2) {
           this.fwcode = tempArray[0];
           this.codeOfItem = tempArray[1];
@@ -84,8 +78,11 @@ export class ModalComponent implements OnInit {
       newFd.append('fwCode', this.code);
       newFd.append('fwDescription', this.description);
       newFd.append('action', this.data['action']);
+      this.setLoader.setLoaderFlag.next(true);
       this.createupdate.sendingRequest(newFd)
         .subscribe((res) => {
+          this.setLoader.setLoaderFlag.next(false);
+          this.dialogRef.close();
           if (res === null || res === undefined) {
             console.log('In response got ', res);
             return;
@@ -93,12 +90,30 @@ export class ModalComponent implements OnInit {
           console.log('Status of ' + this.data['action'] + ' is' + res);
         },
           (err) => {
+            this.setLoader.setLoaderFlag.next(false);
+
             console.log('error');
-          });
+           if (err.error.text === 'successful') {
+              //  this.publishStatus = 1;
+              this.successRes = true;
+              setTimeout( ( ) => {
+               this.onNoClick();
+              }, 2000);
+          }
+          if (err.error.text === 'failed') {
+            //  this.publishStatus = 1;
+            this.failureRes = true;
+            setTimeout( ( ) => {
+             this.onNoClick();
+            }, 2000);
+        }
+        });
     } else if (this.data.action === 'publish') {
       this.publishFramework();
     } else if (this.data.action === 'download') {
       this.downloadExcel();
+    } else if(this.data.action === 'setdefaultframework'){
+      this.setDefaultFramework();
     } else {
       console.log('All mandatory inputs are not filled');
     }
@@ -111,18 +126,7 @@ export class ModalComponent implements OnInit {
         },
           (err) => {
             console.log('Delete category error', err);
-            if (err.error.text === 'successful') {
-              this.successRes = true;
-              setTimeout( ( ) => {
-                this.onNoClick();
-               }, 2000);
-            }
-            if (err.error.text === 'failed') {
-              this.failureRes = true;
-              setTimeout( ( ) => {
-                this.onNoClick();
-               }, 2000);
-            }
+            this.afterResponseMessage(err);
           });
     } else {
       // delete terms in loop
@@ -150,19 +154,7 @@ export class ModalComponent implements OnInit {
       }
     }, (error) => {
       console.log('error catched ', error);
-      if (error.error.text === 'successful') {
-        //  this.publishStatus = 1;
-        this.successRes = true;
-        setTimeout( ( ) => {
-         this.onNoClick();
-        }, 2000);
-      } else {
-        //  this.publishStatus = 2;
-        this.failureRes = true;
-        setTimeout( ( ) => {
-          this.onNoClick();
-         }, 2000);
-      }
+     this.afterResponseMessage(error);
     });
   }
   downloadExcel() {
@@ -174,6 +166,7 @@ export class ModalComponent implements OnInit {
     this.exportExcel.exportExcel(this.code).subscribe(
       (res) => {
         this.setLoader.setLoaderFlag.next(false);
+        this.dialogRef.close();
         if (res === null || res === undefined) {
           console.log('In response got ', res);
           return;
@@ -189,18 +182,22 @@ export class ModalComponent implements OnInit {
         a.click();
       },
       (error) => {
-        const binaryData = [];
-        binaryData.push(error.error.text);
-        console.log('Inside error', error.error.text);
-        const blob = new Blob((binaryData), { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        const downloadUrl = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = downloadUrl;
-        a.download = 'demo.xlsx';
-        document.body.appendChild(a);
-        a.click();
+        console.log(error);
+        this.setLoader.setLoaderFlag.next(false);
       });
 
+  }
+  setDefaultFramework() {
+    this.setLoader.setLoaderFlag.next(true);
+        this.setDefault.setFramework({fwCode : this.code , rootorgId : this.rootorgId}).subscribe
+        ((res) => {
+          this.setLoader.setLoaderFlag.next(false);
+
+        },
+        (err) => {
+          this.setLoader.setLoaderFlag.next(false);
+           this.afterResponseMessage(err);
+        });
   }
   initiateDeleteSequence(deletedCB) {
     const deleteLog = {
@@ -256,6 +253,12 @@ export class ModalComponent implements OnInit {
         return subTerm !== item['identifier'].split('_')[2];
       });
     }
+    this.select();
+  }
+  select() {
+    this.selectedAll = this.children.every(function ( item2: any ) {
+      return item2.selected === true;
+    });
   }
   readSubTerms(fwcode, catgCode, codeOfItem) {
     this.termRead.readTerms(fwcode, catgCode, codeOfItem).subscribe((res) => {
@@ -303,5 +306,30 @@ export class ModalComponent implements OnInit {
         });
     }
 
+  }
+  checkuncheckAll(event) {
+      for (let i = 0; i < this.children.length; i++) {
+        this.subTermsToDelete.push((this.children[i]['identifier'].split('_'))[2]);
+        this.children[i].selected = this.selectedAll;
+      }
+    if (event.target.checked === false) {
+      const temp = this.subTermsToDelete[0];
+      this.subTermsToDelete = [];
+    }
+  }
+  afterResponseMessage(res){
+    if (res.error.text === 'successful') {
+      //  this.publishStatus = 1;
+      this.successRes = true;
+      setTimeout( ( ) => {
+       this.onNoClick();
+      }, 2000);
+    } else {
+      //  this.publishStatus = 2;
+      this.failureRes = true;
+      setTimeout( ( ) => {
+        this.onNoClick();
+       }, 2000);
+    }
   }
 }

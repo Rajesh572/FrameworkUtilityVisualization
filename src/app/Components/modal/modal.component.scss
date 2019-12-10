@@ -1,5 +1,5 @@
 h4{
-    text-align: center;
+    text-align: left;
     font-weight: bold;
 }
 .inputfields{
@@ -17,6 +17,9 @@ input.inputfield{    width: 70%;
 }
 .cancelbtn,.confirmbtn{
     margin: 0 10px;
+}
+.help .cancelbtn{
+    text-align: center;
 }
 .materialcustombtn{
     background-color: #ccc9d2;
@@ -55,3 +58,35 @@ input.inputfield{    width: 70%;
 ::-webkit-scrollbar-thumb {
     background-color:grey;
 }
+.materialformfiels{
+    margin: 0;
+}
+::ng-deep .mat-form-field-placeholder{
+
+    font-size:5px ;
+  }
+
+  .upload-btn-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    margin-bottom: 7px;
+  }
+  
+  .btn {
+    border: 2px solid gray;
+    color: gray;
+    background-color: white;
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: bold;
+  }
+  
+  .upload-btn-wrapper input[type=file] {
+    font-size: 100px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+  }

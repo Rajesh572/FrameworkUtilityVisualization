@@ -24,5 +24,10 @@
         "source": false,
         "changeOrigin": true,
         "target":"http://localhost:9000"
+    },
+    "/setdefaultframework": {
+        "source": false,
+        "changeOrigin": true,
+        "target":"http://localhost:9000"
     }
 }

@@ -31,6 +31,9 @@ export class TermsComponent implements OnInit {
       this.catgCode = data.categoryCode;
       this.terms = data.fwReadBody;
       if (!!this.terms && this.terms.length > 0) {
+        const t = this.terms;
+        this.terms = [];
+
         /* this.findLiveTerms((tempArray) => {
           this.terms = [];
           this.terms = tempArray;
@@ -38,7 +41,7 @@ export class TermsComponent implements OnInit {
           this.termcode = (this.terms[0]);
           this.readTerm(this.termcode, 0);
         }); */
-        this.liveTerms.findLiveTerms(this.terms).
+        this.liveTerms.findLiveTerms(t).
         subscribe((res) => {
             if (res != null && res) {
               this.terms = [];
@@ -46,11 +49,16 @@ export class TermsComponent implements OnInit {
               this.flag = true;
           this.termcode = (this.terms[0]);
           this.readTerm(this.termcode, 0);
-          this.setLoader.setLoaderFlag.next(false);
+          setTimeout( () => {
+            this.setLoader.setLoaderFlag.next(false);
+
+          }, 1000);
             }
         },
         (err) => {
 console.log(err);
+this.setLoader.setLoaderFlag.next(false);
+
         });
       }
     });

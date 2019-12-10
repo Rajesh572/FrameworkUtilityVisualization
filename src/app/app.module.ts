@@ -19,6 +19,7 @@ import { ModalComponent } from './Components/modal/modal.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import { DragAndDropModule } from 'angular-draggable-droppable';
+import {MatInputModule} from '@angular/material/input';
 @NgModule({
   declarations: [
     AppComponent,
@@ -41,7 +42,8 @@ import { DragAndDropModule } from 'angular-draggable-droppable';
     DragDropModule,
     MatDialogModule,
     MatButtonModule,
-    DragAndDropModule
+    DragAndDropModule,
+    MatInputModule
   ],
   providers: [],
   bootstrap: [AppComponent],

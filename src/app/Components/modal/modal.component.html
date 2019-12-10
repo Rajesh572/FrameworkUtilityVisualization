@@ -1,65 +1,131 @@
 <div *ngIf="(data?.action === 'create') || (data?.action === 'update')" mat-dialog-content>
   <h4>Please Enter the following details</h4>
-   <form>
-     <div class="inputfields">
-        <p><input class="inputfield" type="text" name="fwname" placeholder="Enter Framework Name" [(ngModel)]="name" ></p>
-        <p><input class="inputfield" type="text" name="fwcode" placeholder="Enter Framework Code" [(ngModel)]="code" ></p>
-        <p><input class="inputfield" type="text" name="fwdesc" placeholder="Enter Framework Description" [(ngModel)]="description"></p>
-        <input type="file" name="myfile" id='myUploadInput' (change)="handleUpload($event)"/>
+  <form>
+    <div>
+    <p class="materialformfiels">
+        <mat-form-field class="example-full-width">
+
+            <input matInput type="text" name="fwname" placeholder="Enter Framework Name" [(ngModel)]="name">
+    
+          </mat-form-field>
+        
+    </p> 
+    <p class="materialformfiels">
+        <mat-form-field class="example-full-width">
+
+            <input matInput type="text" name="fwcode" placeholder="Enter Framework Code" [(ngModel)]="code">
+    
+    
+          </mat-form-field>
+        
+    </p>  
+
+    <p class="materialformfiels">
       
-     </div>
-    </form> 
+     <mat-form-field class="example-full-width">
+
+        <input matInput type="text" name="fwdesc" placeholder="Enter Framework Description" [(ngModel)]="description">
+
+      </mat-form-field>
+    </p> 
+      <!-- <input type="file" name="myfile" id='myUploadInput' (change)="handleUpload($event)" />
+ -->
+ <div class="upload-btn-wrapper">
+    <button class="btn">Upload</button>
+    <input type="file" name="myfile" (change)="handleUpload($event)"/>
+  </div>
+
+
+
+    </div>
+  </form>
 </div>
 <div *ngIf="data?.action === 'delete'" mat-dialog-content>
   <div *ngIf="!(typeOfItem === 'category')">
     <h5>Parent Term:</h5>
-  <p><input type="checkbox" checked disabled><label>{{nameOfItem}}</label></p>
-  <ng-container *ngFor="let child of children;let i=index">
-    <h5 *ngIf="i===0">Subterms:</h5>
-  <p><input type="checkbox" (change)="toggleEditable($event,child)"><label>{{child?.name}}</label>
-    <span class="subtermHierarchy" *ngIf="child?.hierarchy">
-    <i class="fa fa-sitemap" aria-hidden="true"></i>
-    <span class="tooltiptext"> Delete its subterms first</span>
-  </span></p>
-  </ng-container>
+    <p><input type="checkbox" checked disabled><label>{{nameOfItem}}</label></p>
+    
+    <ng-container *ngFor="let child of children;let i=index">
+      <h5 *ngIf="i===0">Subterms:</h5>
+      <ng-container *ngIf="children.length > 1 && i===0">
+          <p><input type="checkbox" [(ngModel)]="selectedAll" (change)="checkuncheckAll($event)"><label>Select All</label>
+          </p>
+      </ng-container>
+      <p><input type="checkbox" (change)="toggleEditable($event,child)" [(ngModel)]="child.selected"><label>{{child?.name}}</label>
+        <span class="subtermHierarchy" *ngIf="child?.hierarchy">
+          <i class="fa fa-sitemap" aria-hidden="true"></i>
+          <span class="tooltiptext"> Delete its subterms first</span>
+        </span></p>
+    </ng-container>
   </div>
   <p>Are you sure?</p>
 </div>
 <div *ngIf="(data?.action === 'publish') || (data?.action === 'download')" mat-dialog-content>
-    <h4>Please Enter the following detail</h4>
-     <form>
-       <div class="inputfields">
-          <p><input class="inputfield" type="text" name="fwcode" placeholder="Enter Framework Code" [(ngModel)]="code" ></p>
-       </div>
-      </form> 
-  </div>
-  <div *ngIf="successRes">
-    <p>Success</p>
-  </div>
-  <div *ngIf="failureRes">
-    <p>Failure</p>
-  </div>
-  <div *ngIf="termsdeletionProcess">
-    <p>Terms deletion process completed , Please publish the framework</p>
-  </div>
-<div *ngIf="!(data?.action === 'help')" class="buttons">
-  
-    <button class="confirmbtn" mat-raised-button color="primary" (click)="sendReq()">Confirm</button>
-  <button class="cancelbtn" class="materialcustombtn" mat-raised-button  (click)="onNoClick()">Cancel</button>
+  <h4>Please Enter the following detail</h4>
+  <form>
+    <div class="inputfields">
+      <mat-form-field class="example-full-width">
+        <input matInput type="text" name="fwcode" placeholder="Enter Framework Code" [(ngModel)]="code">
+
+      </mat-form-field>
+    </div>
+  </form>
 </div>
-<div *ngIf="(data?.action === 'help')">
-    <li><i class="fa fa-sitemap" aria-hidden="true"></i><span> => </span><span>Means it has child terms</span></li>
-   <p>
-    <li>First delete subterms , then parent terms</li>
+<div *ngIf="(data?.action === 'setdefaultframework')" mat-dialog-content>
+    <h4>Please Enter the following details</h4>
+    <form>
+      <div class="inputfields">
+        <p>
 
-   </p> 
-    <p>
-      <li>Deleting a category deletes all its terms</li>
+            <mat-form-field class="example-full-width">
+                <input matInput type="text" name="fwcode" placeholder="Enter Framework Code" [(ngModel)]="code">
+        
+              </mat-form-field>
+        </p>
+        <p>
 
-    </p>
-    <p>
-      <li>Publish after each updation</li>
+            <mat-form-field class="example-full-width">
+                <input matInput type="text" name="rootorgid" placeholder="Enter Root Org Id" [(ngModel)]="rootorgId">
+        
+              </mat-form-field>
+        </p>
+      </div>
+    </form>
+  </div>
+<div *ngIf="successRes">
+  <p>Success</p>
+</div>
+<div *ngIf="failureRes">
+  <p>Failure</p>
+</div>
+<div *ngIf="termsdeletionProcess">
+  <p>Terms deletion process completed , Please publish the framework</p>
+</div>
+<div *ngIf="!(data?.action === 'help')" class="buttons">
 
-    </p>
-    <button class="cancelbtn" class="materialcustombtn" mat-raised-button  (click)="onNoClick()">Close</button>
+  <button class="confirmbtn" mat-raised-button color="primary" (click)="sendReq()">Confirm</button>
+  <button class="cancelbtn" class="materialcustombtn" mat-raised-button (click)="onNoClick()">Cancel</button>
+</div>
+<div class="help" *ngIf="(data?.action === 'help')">
+  <p>
+
+      <li>
+          <i class="fa fa-sitemap" aria-hidden="true"></i>
+          <span> => </span>
+          <span>Represent child terms</span>
+        </li>
+  </p>
+  <p>
+    <li>Delete subterms first then a parent term as subterms will remain in Live state if not deleted</li>
+
+  </p>
+  <p>
+    <li>If we delete a category , then its terms will not reflect in the framework but will remain in Live state</li>
+
+  </p>
+  <p>
+    <li>Publish the framework after every updation</li>
+
+  </p>
+  <button class="cancelbtn" mat-raised-button color="primary"  (click)="onNoClick()">Close</button>
 </div>
