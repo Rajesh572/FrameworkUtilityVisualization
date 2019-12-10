@@ -19,7 +19,7 @@ textarea:focus, input:focus{
 .allDetails{
     display: flex;
     overflow-x: auto;
-    min-height: 73.57%;
+    min-height: 72.1%;
     padding-top: 10px;
     background-color: #dadfff;
     
@@ -214,8 +214,8 @@ table, th, td {
   }
 button.sidebarbtn{
     padding: 0;
-    padding-top: 9px;
-    margin: 0 0 1.2rem 0;
+    padding-top: 10px;
+    margin: 0 0 0 0;
     background-color: transparent;
     border: none;
     width: 100%;
@@ -232,8 +232,8 @@ button.sidebarbtn{
     font-weight: bold;
 }
 .droparea{
-    min-height: 86px;
-    max-height: 86px;
+    min-height: 87px;
+    max-height: 87px;
     display: flex;
     background-color: #dadfff;
 }
