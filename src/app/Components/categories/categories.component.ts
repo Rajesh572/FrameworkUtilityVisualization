@@ -48,9 +48,13 @@ flag = true;
   if (data['result'].category.terms.length > 0) {
   this.fwCatgRead.fwResponse.next({frameworkCode: this.frameworkCode, categoryCode: this.catgCode,
     fwReadBody: data['result'].category.terms});
+  } else {
+    this.setLoader.setLoaderFlag.next(false);
   }
       },
       (error) => {
+        this.setLoader.setLoaderFlag.next(false);
+
         console.log('error in reading terms', error);
       });
   }

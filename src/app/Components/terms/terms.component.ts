@@ -49,10 +49,6 @@ export class TermsComponent implements OnInit {
               this.flag = true;
           this.termcode = (this.terms[0]);
           this.readTerm(this.termcode, 0);
-          setTimeout( () => {
-            this.setLoader.setLoaderFlag.next(false);
-
-          }, 1000);
             }
         },
         (err) => {
@@ -74,6 +70,17 @@ this.setLoader.setLoaderFlag.next(false);
               subscribe((data) => {
                 //     this.setLoader.setLoaderFlag.next(false);
                 console.log(data['result'].term);
+                if (data['result'].term['associations']) {
+                  if (data['result'].term['associations'].length > 0) {
+                    this.setLoader.setLoaderFlag.next(true);
+                  } else {
+                    this.setLoader.setLoaderFlag.next(false);
+
+                  }
+                }  else {
+                  this.setLoader.setLoaderFlag.next(false);
+
+                }
                 this.fwTermRead.fwTermBody.next(data['result'].term);
               },
               (error) => {

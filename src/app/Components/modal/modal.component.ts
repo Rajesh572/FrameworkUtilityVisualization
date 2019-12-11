@@ -92,7 +92,7 @@ export class ModalComponent implements OnInit {
           (err) => {
             this.setLoader.setLoaderFlag.next(false);
 
-            console.log('error');
+            console.log(err,'error');
            if (err.error.text === 'successful') {
               //  this.publishStatus = 1;
               this.successRes = true;
