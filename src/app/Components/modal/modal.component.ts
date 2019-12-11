@@ -90,18 +90,17 @@ export class ModalComponent implements OnInit {
           console.log('Status of ' + this.data['action'] + ' is' + res);
         },
           (err) => {
-            this.setLoader.setLoaderFlag.next(false);
 
             console.log(err,'error');
            if (err.error.text === 'successful') {
-              //  this.publishStatus = 1;
+              this.setLoader.setLoaderFlag.next(false);
               this.successRes = true;
               setTimeout( ( ) => {
                this.onNoClick();
               }, 2000);
           }
           if (err.error.text === 'failed') {
-            //  this.publishStatus = 1;
+            this.setLoader.setLoaderFlag.next(false);
             this.failureRes = true;
             setTimeout( ( ) => {
              this.onNoClick();
