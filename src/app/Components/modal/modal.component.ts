@@ -7,6 +7,7 @@ import { PublishFrameworkService } from 'src/app/Services/publishFramework/publi
 import { SetLoaderService } from 'src/app/Services/setLoader/set-loader.service';
 import { DownloadExcelService } from 'src/app/Services/DownloadExcel/download-excel.service';
 import { SetDefaultService } from 'src/app/Services/setDefault/set-default.service';
+import { GetStatusService } from 'src/app/Services/getStatus/get-status.service';
 export interface DialogData {
   action: string;
 }
@@ -32,12 +33,14 @@ export class ModalComponent implements OnInit {
   subTermsToDelete = [];
   successRes = false;
   failureRes = false;
+  intervalId = null;
   termsdeletionProcess = false;
+  mandatoryfields: boolean;
   constructor(public dialogRef: MatDialogRef<ModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData, public createupdate: CreateUpdateReqService,
     public todeleteData: DeleteDataService, public termRead: FWTermsReadService, public fwPublishService: PublishFrameworkService,
     public setLoader: SetLoaderService, public exportExcel: DownloadExcelService, 
-    public setDefault: SetDefaultService) { }
+    public setDefault: SetDefaultService, public getStatus: GetStatusService) { }
 
   ngOnInit() {
     this.todeleteData.data.subscribe((info) => {
@@ -78,7 +81,9 @@ export class ModalComponent implements OnInit {
       newFd.append('fwCode', this.code);
       newFd.append('fwDescription', this.description);
       newFd.append('action', this.data['action']);
+     // this.checkStatus();
       this.setLoader.setLoaderFlag.next(true);
+   // this.onNoClick();
       this.createupdate.sendingRequest(newFd)
         .subscribe((res) => {
           this.setLoader.setLoaderFlag.next(false);
@@ -90,23 +95,12 @@ export class ModalComponent implements OnInit {
           console.log('Status of ' + this.data['action'] + ' is' + res);
         },
           (err) => {
-            this.setLoader.setLoaderFlag.next(false);
+        //    this.setLoader.setLoaderFlag.next(false);
+            console.log(err, 'error');
+            if (err.error.text === 'Started Successfully'){
+            this.intervalId = setInterval(this.checkStatus.bind(this), 10000);
+            }
 
-            console.log(err,'error');
-           if (err.error.text === 'successful') {
-              //  this.publishStatus = 1;
-              this.successRes = true;
-              setTimeout( ( ) => {
-               this.onNoClick();
-              }, 2000);
-          }
-          if (err.error.text === 'failed') {
-            //  this.publishStatus = 1;
-            this.failureRes = true;
-            setTimeout( ( ) => {
-             this.onNoClick();
-            }, 2000);
-        }
         });
     } else if (this.data.action === 'publish') {
       this.publishFramework();
@@ -115,6 +109,7 @@ export class ModalComponent implements OnInit {
     } else if(this.data.action === 'setdefaultframework'){
       this.setDefaultFramework();
     } else {
+      this.mandatoryfields = true;
       console.log('All mandatory inputs are not filled');
     }
   }
@@ -318,18 +313,45 @@ export class ModalComponent implements OnInit {
     }
   }
   afterResponseMessage(res){
-    if (res.error.text === 'successful') {
+    if (res.error.text === 'successful' || res === 'successful') {
       //  this.publishStatus = 1;
       this.successRes = true;
       setTimeout( ( ) => {
        this.onNoClick();
       }, 2000);
-    } else {
+    } else if (res.error.text !== 'false' || res !== 'false') {
       //  this.publishStatus = 2;
       this.failureRes = true;
       setTimeout( ( ) => {
         this.onNoClick();
        }, 2000);
     }
+  }
+
+  checkStatus() {
+    this.getStatus.retrieveStatus().subscribe( (res) => {
+     console.log('Response', res);
+     if (res === 'failed') {
+       clearInterval(this.intervalId);
+       console.log('Request failed', res);
+      this.setLoader.setLoaderFlag.next(false);
+      this.afterResponseMessage(res);
+     } else if (res === 'successful') {
+      clearInterval(this.intervalId);
+      console.log('Request successful', res);
+     this.setLoader.setLoaderFlag.next(false);
+     this.afterResponseMessage(res);
+    } else if (res === 'false') {
+      console.log('Request is in process');
+    }
+    },
+    (err) => {
+      clearInterval(this.intervalId);
+
+      this.setLoader.setLoaderFlag.next(false);
+     this.afterResponseMessage(err);
+    
+      console.log('Error', err);
+    });
   }
 }

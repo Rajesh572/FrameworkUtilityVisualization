@@ -76,6 +76,7 @@ export class DetailsComponent implements OnInit {
        // this.count2 = this.count2 + 1;
         component.instance['currentIndex'] = this.componentsOfSubterms.length;
         component.instance['subtermshierachicalData'] = data['associatedData'];
+        component.instance['currentIndex'] = data['index'];
         console.log('componentsOfSubtermsAssociation array', this.componentsOfSubtermsAssociation);
       }
     });

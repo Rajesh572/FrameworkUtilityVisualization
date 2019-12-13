@@ -29,5 +29,10 @@
         "source": false,
         "changeOrigin": true,
         "target":"http://localhost:9000"
+    },
+    "/retrieveStatus":{
+        "source": false,
+        "changeOrigin": true,
+        "target":"http://localhost:9000"
     }
 }

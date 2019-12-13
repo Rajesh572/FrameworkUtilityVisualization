@@ -1,5 +1,6 @@
 ul{
     padding: 0;
+    margin: 0;
 }
 li{
     cursor:grab;
@@ -18,11 +19,11 @@ li{
 }
 li{
     border-bottom: 1px solid #efe4e4;
-    border-top: 1px solid #efe4e4;
-    margin-bottom: 0.75rem;
+    padding: 8px;
     margin-top: 0.2em;
 }
 .card-body{
+    
     max-height: 58vh;
     overflow-y: auto;
     padding: 0;
@@ -30,7 +31,7 @@ li{
 }
 ::-webkit-scrollbar {
  
-    width: 10px;
+    width: 7px;
     background:white;
 
 }

@@ -8,14 +8,14 @@
       <div class="card-body">
          <ul *ngIf="subtermshierachicalData.length === 0">
             <li *ngFor="let subTermAssociation of subtermsAssociations">
-               <p style="margin-top: 10px;padding-left: 10px;" *ngIf="flag">
+               <p  *ngIf="flag">
                {{subTermAssociation?.category}}-{{subTermAssociation?.name}}
                </p>
             </li>
          </ul>
          <ul *ngIf="subtermshierachicalData.length > 0">
             <li *ngFor="let subTermAssociation of subtermshierachicalData">
-               <p style="margin-top: 10px;padding-left: 10px;" *ngIf="flag">
+               <p  *ngIf="flag">
                {{subTermAssociation?.category}}-{{subTermAssociation?.name}}
                </p>
             </li>

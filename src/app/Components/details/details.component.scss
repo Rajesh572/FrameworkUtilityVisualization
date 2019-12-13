@@ -26,7 +26,7 @@ textarea:focus, input:focus{
     .flex-wrapper-column {
         flex: 1;
         min-height: 38vh;
-        padding: 0 4px;
+        padding: 0 0;
 
         ::ng-deep .card-container {
             max-width: 45vh;
@@ -53,7 +53,7 @@ textarea:focus, input:focus{
    ::ng-deep .flex-wrapper-column {
         flex: 1;
         min-height: 38vh;
-        padding: 0 0;
+        padding: 0 4px;
 
         ::ng-deep .card-container {
             max-width: 40vh;

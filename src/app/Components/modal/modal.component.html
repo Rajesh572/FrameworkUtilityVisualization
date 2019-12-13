@@ -5,7 +5,7 @@
     <p class="materialformfiels">
         <mat-form-field class="example-full-width">
 
-            <input matInput type="text" name="fwname" placeholder="Enter Framework Name" [(ngModel)]="name">
+            <input matInput type="text" name="fwname" placeholder="Enter Framework Name" [(ngModel)]="name" [required]="true">
     
           </mat-form-field>
         
@@ -13,7 +13,7 @@
     <p class="materialformfiels">
         <mat-form-field class="example-full-width">
 
-            <input matInput type="text" name="fwcode" placeholder="Enter Framework Code" [(ngModel)]="code">
+            <input matInput type="text" name="fwcode" placeholder="Enter Framework Code" [(ngModel)]="code" [required]="true">
     
     
           </mat-form-field>
@@ -65,7 +65,7 @@
   <form>
     <div class="inputfields">
       <mat-form-field class="example-full-width">
-        <input matInput type="text" name="fwcode" placeholder="Enter Framework Code" [(ngModel)]="code">
+        <input matInput type="text" name="fwcode" placeholder="Enter Framework Code" [(ngModel)]="code" [required]="true">
 
       </mat-form-field>
     </div>
@@ -78,14 +78,14 @@
         <p>
 
             <mat-form-field class="example-full-width">
-                <input matInput type="text" name="fwcode" placeholder="Enter Framework Code" [(ngModel)]="code">
+                <input matInput type="text" name="fwcode" placeholder="Enter Framework Code" [(ngModel)]="code" [required]="true">
         
               </mat-form-field>
         </p>
         <p>
 
             <mat-form-field class="example-full-width">
-                <input matInput type="text" name="rootorgid" placeholder="Enter Root Org Id" [(ngModel)]="rootorgId">
+                <input matInput type="text" name="rootorgid" placeholder="Enter Root Org Id" [(ngModel)]="rootorgId" [required]="true">
         
               </mat-form-field>
         </p>
@@ -100,6 +100,9 @@
 </div>
 <div *ngIf="termsdeletionProcess">
   <p>Terms deletion process completed , Please publish the framework</p>
+</div>
+<div *ngIf="mandatoryfields">
+  <span style="color: red;">Please input mandatory fields</span>
 </div>
 <div *ngIf="!(data?.action === 'help')" class="buttons">
 

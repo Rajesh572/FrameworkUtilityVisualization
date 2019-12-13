@@ -46,7 +46,7 @@ export class SubtermsComponent implements OnInit {
           }
           if (data['result'].term['associations'] && data['result'].term['associations'].length > 0) {
               this.subtermsdivs.hierachicalAssociation.next({parentcomp: SubtermsComponent, comp: SubtermsassociationComponent,
-                associatedData: data['result'].term['associations']});
+                associatedData: data['result'].term['associations'], index : this.currentIndex});
           }
         },
         (error) => {
