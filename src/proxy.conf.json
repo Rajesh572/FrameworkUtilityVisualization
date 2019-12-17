@@ -39,5 +39,11 @@
         "source": false,
         "changeOrigin": true,
         "target":"http://localhost:9000"
+    },
+    "/setErrorLogs":{
+        "source": false,
+        "changeOrigin": true,
+        "target":"http://localhost:9000"
+    
     }
 }

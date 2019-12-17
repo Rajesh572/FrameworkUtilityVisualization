@@ -11,6 +11,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSnackBarConfig } from '@angular/material';
 import { ProcessStatusService } from 'src/app/Services/ProcessStatus/process-status.service';
 import { ProcessIdStorageService } from 'src/app/Services/processId/process-id-storage.service';
+import { ErrorHandlerService } from 'src/app/Services/errorHandler/error-handler.service';
+import { CustomHandler } from 'src/app/custom-handler';
 export interface DialogData {
   action: string;
 }
@@ -45,7 +47,7 @@ export class ModalComponent implements OnInit {
     public todeleteData: DeleteDataService, public termRead: FWTermsReadService, public fwPublishService: PublishFrameworkService,
     public exportExcel: DownloadExcelService,
     public setDefault: SetDefaultService, public getStatus: GetStatusService, public snackBar: MatSnackBar,
-    public getReport: ProcessStatusService, public processIdData: ProcessIdStorageService) { }
+    public getReport: ProcessStatusService, public processIdData: ProcessIdStorageService, public errorhandler: ErrorHandlerService) { }
 
   ngOnInit() {
     if (this.data['action'] === 'status') {
@@ -94,6 +96,7 @@ export class ModalComponent implements OnInit {
               'status': res[val['processId']].status,
               'reason': res[val['processId']].reason
             });
+            this.setAllLogs(res, val);
           }
         });
       });
@@ -125,6 +128,8 @@ export class ModalComponent implements OnInit {
       } else if (this.data['action'] === 'update') {
         this.beforeResponseMessage('Framework updation started successfully');
       }
+      this.setAllLogs(pid,this.code, this.data['action']);
+
       this.createupdate.sendingRequest(newFd)
         .subscribe((res) => {
           this.dialogRef.close();
@@ -139,7 +144,7 @@ export class ModalComponent implements OnInit {
             if (err.error.text === 'Started Successfully') {
               this.intervalId = setInterval(this.checkStatus.bind(this), 20000);
             }
-
+         //   throw new GlobalException('Failed');
           });
     } else if (this.data.action === 'publish') {
       this.publishFramework();
@@ -156,6 +161,7 @@ export class ModalComponent implements OnInit {
   sendReqForDelete() {
     if (this.typeOfItem === 'category') {
       this.onNoClick();
+     // this.setAllLogs('Deletion of category started', this.fwcode, this.data['action']);
       this.beforeResponseMessage('Deletion of category started successfully');
       this.todeleteData.deleteItem({ type: this.typeOfItem, fwCode: this.fwcode, catgCode: this.codeOfItem })
         .subscribe((res) => {
@@ -184,6 +190,7 @@ export class ModalComponent implements OnInit {
     const uuidv1 = require('uuid/v1');
     const pid = uuidv1();
     this.updateProcessIdArray(pid);
+    this.setAllLogs(pid, this.fwcode, this.data['action']);
     this.beforeResponseMessage('Publish framework started successfully');
     this.fwPublishService.publishFramework(this.fwcode, pid).subscribe((res) => {
       if (res === null || res === undefined) {
@@ -210,6 +217,8 @@ export class ModalComponent implements OnInit {
     const pid = uuidv1();
     this.updateProcessIdArray(pid);
     this.onNoClick();
+    this.setAllLogs(pid, this.fwcode, this.data['action']);
+
     this.beforeResponseMessage('Downloading Excel started successfully');
     this.exportExcel.exportExcel(this.fwcode, pid).subscribe(
       (res) => {
@@ -234,17 +243,41 @@ export class ModalComponent implements OnInit {
       });
 
   }
+  setAllLogs(res, val, action?) {
+    let msg = '' ;
+    if (action) {
+        if (action === 'delete') {
+           msg = 'Deletion';
+        } else {
+          msg = ' ProcessId:' + res + ' FrameworkCode:' + val + ' Action:' +
+          action;
+        }
+    } else {
+      msg = ' ProcessId:' + val['processId'] + ' Action:' + res[val['processId']].action + ' Status:' +
+      res[val['processId']].status;
+
+    }
+            this.errorhandler.sendErrorMessage(this.getTime() + '   ' + msg).subscribe( ( response ) => {
+              console.log(response);
+            },
+            (err) => {
+              console.log(err);
+            });
+  }
   setDefaultFramework() {
     this.onNoClick();
+
     this.beforeResponseMessage('Setting default framework started successfully');
     const uuidv1 = require('uuid/v1');
     const processId = uuidv1();
+    this.setAllLogs(processId, this.fwcode, this.data['action']);
     this.updateProcessIdArray(processId);
-    this.setDefault.setFramework({ fwCode: this.fwcode, rootorgId: this.rootorgId, pid: processId }).subscribe
+   const req = this.setDefault.setFramework({ fwCode: this.fwcode, rootorgId: this.rootorgId, pid: processId }).subscribe
       ((res) => {
       },
         (err) => {
           this.afterResponseMessage(err, 'Setting Default Frammework ');
+          req.unsubscribe();
         });
   }
   initiateDeleteSequence(deletedCB) {
@@ -371,10 +404,12 @@ export class ModalComponent implements OnInit {
     config.verticalPosition = 'top';
     config.duration = 5000;
     if (res === 'successful' || res.error.text === 'successful') {
+   //   this.setAllLogs(message, this.fwcode, this.data['action']);
       this.snackBar.open(message + 'successful', 'Close', config);
     } else if (res !== 'false' || res.error.text !== 'false') {
+   //   this.setAllLogs(message, this.fwcode, this.data['action']);
       this.snackBar.open(message + 'failed', 'Close', config);
-
+      throw new CustomHandler();
     }
   }
   beforeResponseMessage(message) {

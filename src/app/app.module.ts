@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule} from '@angular/core';
+import { NgModule, ErrorHandler, Injectable} from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -22,6 +22,9 @@ import { DragAndDropModule } from 'angular-draggable-droppable';
 import {MatInputModule} from '@angular/material/input';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { ActivemenuDirective } from './directives/activemenu.directive';
+import { SideBarComponent } from './Components/side-bar/side-bar.component';
+import { ErrorHandlerService } from './Services/errorHandler/error-handler.service';
+import { CustomHandler } from './custom-handler';
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,7 +36,8 @@ import { ActivemenuDirective } from './directives/activemenu.directive';
     AssociationsComponent,
     SubtermsassociationComponent,
     ModalComponent,
-    ActivemenuDirective
+    ActivemenuDirective,
+    SideBarComponent
   ],
   imports: [
     BrowserModule,
@@ -49,7 +53,12 @@ import { ActivemenuDirective } from './directives/activemenu.directive';
     MatInputModule,
     MatSnackBarModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: ErrorHandler,
+      useClass: CustomHandler,
+     },
+  ],
   bootstrap: [AppComponent],
   entryComponents: [SubtermsComponent, SubtermsassociationComponent, ModalComponent]
 })
