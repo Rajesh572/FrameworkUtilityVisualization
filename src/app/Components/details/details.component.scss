@@ -214,12 +214,17 @@ table, th, td {
   }
 button.sidebarbtn{
     padding: 0;
-    padding-top: 10px;
+    padding-top: 8px;
     margin: 0 0 0 0;
-    background-color: transparent;
+    background: none;
     border: none;
     width: 100%;
     color : white;
+    
+}
+.selected {
+    background: #fff !important;
+    color: #333 !important;
 }
 .utilitylogo{
     text-align: center;

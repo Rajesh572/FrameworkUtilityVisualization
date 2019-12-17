@@ -20,6 +20,8 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import { DragAndDropModule } from 'angular-draggable-droppable';
 import {MatInputModule} from '@angular/material/input';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { ActivemenuDirective } from './directives/activemenu.directive';
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,7 +32,8 @@ import {MatInputModule} from '@angular/material/input';
     SubtermsComponent,
     AssociationsComponent,
     SubtermsassociationComponent,
-    ModalComponent
+    ModalComponent,
+    ActivemenuDirective
   ],
   imports: [
     BrowserModule,
@@ -43,7 +46,8 @@ import {MatInputModule} from '@angular/material/input';
     MatDialogModule,
     MatButtonModule,
     DragAndDropModule,
-    MatInputModule
+    MatInputModule,
+    MatSnackBarModule
   ],
   providers: [],
   bootstrap: [AppComponent],

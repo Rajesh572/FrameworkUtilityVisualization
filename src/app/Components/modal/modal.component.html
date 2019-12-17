@@ -1,5 +1,5 @@
 <div *ngIf="(data?.action === 'create') || (data?.action === 'update')" mat-dialog-content>
-  <h4>Please Enter the following details</h4>
+  <h4>{{data?.action | titlecase}} Framework</h4>
   <form>
     <div>
     <p class="materialformfiels">
@@ -61,24 +61,25 @@
   <p>Are you sure?</p>
 </div>
 <div *ngIf="(data?.action === 'publish') || (data?.action === 'download')" mat-dialog-content>
-  <h4>Please Enter the following detail</h4>
+  <h4>{{data?.action | titlecase}} Framework</h4>
+  <h4></h4>
   <form>
     <div class="inputfields">
       <mat-form-field class="example-full-width">
-        <input matInput type="text" name="fwcode" placeholder="Enter Framework Code" [(ngModel)]="code" [required]="true">
+        <input matInput type="text" name="fwcode" placeholder="Enter Framework Code" [(ngModel)]="fwcode" [required]="true">
 
       </mat-form-field>
     </div>
   </form>
 </div>
 <div *ngIf="(data?.action === 'setdefaultframework')" mat-dialog-content>
-    <h4>Please Enter the following details</h4>
+    <h4>Set Default Framework</h4>
     <form>
       <div class="inputfields">
         <p>
 
             <mat-form-field class="example-full-width">
-                <input matInput type="text" name="fwcode" placeholder="Enter Framework Code" [(ngModel)]="code" [required]="true">
+                <input matInput type="text" name="fwcode" placeholder="Enter Framework Code" [(ngModel)]="fwcode" [required]="true">
         
               </mat-form-field>
         </p>
@@ -104,10 +105,10 @@
 <div *ngIf="mandatoryfields">
   <span style="color: red;">Please input mandatory fields</span>
 </div>
-<div *ngIf="!(data?.action === 'help')" class="buttons">
+<div *ngIf="!(data?.action === 'help' || data?.action === 'status')" class="buttons">
 
-  <button class="confirmbtn" mat-raised-button color="primary" (click)="sendReq()">Confirm</button>
-  <button class="cancelbtn" class="materialcustombtn" mat-raised-button (click)="onNoClick()">Cancel</button>
+  <button class="confirmbtn" appActivemenu mat-raised-button color="primary" (click)="sendReq()">Confirm</button>
+  <button class="cancelbtn" class="materialcustombtn" appActivemenu mat-raised-button (click)="onNoClick()">Cancel</button>
 </div>
 <div class="help" *ngIf="(data?.action === 'help')">
   <p>
@@ -130,5 +131,43 @@
     <li>Publish the framework after every updation</li>
 
   </p>
-  <button class="cancelbtn" mat-raised-button color="primary"  (click)="onNoClick()">Close</button>
+  <button class="cancelbtn" appActivemenu mat-raised-button color="primary"  (click)="onNoClick()">Close</button>
+</div>
+<div class="statustable" *ngIf="data?.action === 'status'">
+<div *ngIf="processFound.length > 0">
+
+  <h4>List of Process and their Status</h4>
+<table  class="table">
+  <thead>
+    <tr>
+      <th>Process Id</th>
+      <th>Start Time</th>
+      <th>End Time</th>
+      <th>Framework Code</th>
+      <th>Action</th>
+      <th>Status</th>
+      <th>Failure Reason</th>
+  
+    </tr>
+  </thead>
+  
+  <tbody>
+    <tr *ngFor="let content of processFound">
+      <td>{{content?.pid}}</td>
+      <td>{{content?.startTime}}</td>
+      <td>{{content?.endTime}}</td>
+      <td>{{content?.fwcode}}</td>
+      <td>{{content?.action}}</td>
+      <td>{{content?.status}}</td>
+      <td>{{content?.reason}}</td>
+    </tr>
+  </tbody>
+  
+</table>
+</div>
+<div *ngIf="!(processFound?.length > 0)">
+ <h4>No Process found</h4>
+</div>
+<button class="cancelbtn " appActivemenu mat-raised-button color="primary"  (click)="onNoClick()">Close</button>
+
 </div>

@@ -4,10 +4,13 @@ import { CreateUpdateReqService } from 'src/app/Services/CreateUpdateReq/create-
 import { DeleteDataService } from 'src/app/Services/deleteData/delete-data.service';
 import { FWTermsReadService } from 'src/app/Services/FWTermsRead/fwterms-read.service';
 import { PublishFrameworkService } from 'src/app/Services/publishFramework/publish-framework.service';
-import { SetLoaderService } from 'src/app/Services/setLoader/set-loader.service';
 import { DownloadExcelService } from 'src/app/Services/DownloadExcel/download-excel.service';
 import { SetDefaultService } from 'src/app/Services/setDefault/set-default.service';
 import { GetStatusService } from 'src/app/Services/getStatus/get-status.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBarConfig } from '@angular/material';
+import { ProcessStatusService } from 'src/app/Services/ProcessStatus/process-status.service';
+import { ProcessIdStorageService } from 'src/app/Services/processId/process-id-storage.service';
 export interface DialogData {
   action: string;
 }
@@ -34,40 +37,70 @@ export class ModalComponent implements OnInit {
   successRes = false;
   failureRes = false;
   intervalId = null;
+  processFound = [];
   termsdeletionProcess = false;
   mandatoryfields: boolean;
   constructor(public dialogRef: MatDialogRef<ModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData, public createupdate: CreateUpdateReqService,
     public todeleteData: DeleteDataService, public termRead: FWTermsReadService, public fwPublishService: PublishFrameworkService,
-    public setLoader: SetLoaderService, public exportExcel: DownloadExcelService, 
-    public setDefault: SetDefaultService, public getStatus: GetStatusService) { }
+    public exportExcel: DownloadExcelService,
+    public setDefault: SetDefaultService, public getStatus: GetStatusService, public snackBar: MatSnackBar,
+    public getReport: ProcessStatusService, public processIdData: ProcessIdStorageService) { }
 
   ngOnInit() {
-    this.todeleteData.data.subscribe((info) => {
-      console.log('Data to delete ', info, this.data['action']);
-      this.successRes = false;
-      this.failureRes = false;
-      this.termsdeletionProcess = false;
-      let tempArray;
-      if (info != null && info !== "") {
-        this.typeOfItem = info['type'];
-        this.codeOfItem = info.item['identifier'];
-        this.nameOfItem = info.item['name'];
-        tempArray = this.codeOfItem.split('_');
-        if (tempArray.length === 3) {
-          this.fwcode = tempArray[0];
-          this.catgCode = tempArray[1];
-          this.codeOfItem = tempArray[2];
-          this.readSubTerms(this.fwcode, this.catgCode, this.codeOfItem);
-        } else if (tempArray.length === 2) {
-          this.fwcode = tempArray[0];
-          this.codeOfItem = tempArray[1];
+    if (this.data['action'] === 'status') {
+      this.getProcessStatus();
+    } else {
+
+      this.todeleteData.data.subscribe((info) => {
+        console.log('Data to delete ', info, this.data['action']);
+        this.successRes = false;
+        this.failureRes = false;
+        this.termsdeletionProcess = false;
+        let tempArray;
+        if (info != null && info !== "") {
+          this.typeOfItem = info['type'];
+          this.codeOfItem = info.item['identifier'];
+          this.nameOfItem = info.item['name'];
+          tempArray = this.codeOfItem.split('_');
+          if (tempArray.length === 3) {
+            this.fwcode = tempArray[0];
+            this.catgCode = tempArray[1];
+            this.codeOfItem = tempArray[2];
+            this.readSubTerms(this.fwcode, this.catgCode, this.codeOfItem);
+          } else if (tempArray.length === 2) {
+            this.fwcode = tempArray[0];
+            this.codeOfItem = tempArray[1];
+          }
         }
-      }
-    });
+      });
+    }
   }
   onNoClick(): void {
     this.dialogRef.close();
+  }
+  getProcessStatus() {
+    this.getReport.getstatusreport().subscribe((res) => {
+      console.log('Response of json', res);
+      this.processIdData.processIdArray.subscribe((items) => {
+        items.forEach((val) => {
+          if (res[val['processId']]) {
+            this.processFound.push({
+              'pid': val['processId'],
+              'startTime': val['startTime'],
+              'endTime': this.getTime(),
+              'fwcode': val['frameworkcode'],
+              'action': res[val['processId']].action,
+              'status': res[val['processId']].status,
+              'reason': res[val['processId']].reason
+            });
+          }
+        });
+      });
+    },
+      (err) => {
+        console.log('Error', err);
+      });
   }
   sendReq() {
     if (this.data['action'] === 'delete') {
@@ -81,12 +114,19 @@ export class ModalComponent implements OnInit {
       newFd.append('fwCode', this.code);
       newFd.append('fwDescription', this.description);
       newFd.append('action', this.data['action']);
-     // this.checkStatus();
-      this.setLoader.setLoaderFlag.next(true);
-   // this.onNoClick();
+      const uuidv1 = require('uuid/v1');
+      const pid = uuidv1();
+      this.updateProcessIdArray(pid);
+      newFd.append('pid', pid);
+      // this.checkStatus();
+      this.onNoClick();
+      if (this.data['action'] === 'create') {
+        this.beforeResponseMessage('Framework creation started successfully');
+      } else if (this.data['action'] === 'update') {
+        this.beforeResponseMessage('Framework updation started successfully');
+      }
       this.createupdate.sendingRequest(newFd)
         .subscribe((res) => {
-          this.setLoader.setLoaderFlag.next(false);
           this.dialogRef.close();
           if (res === null || res === undefined) {
             console.log('In response got ', res);
@@ -95,36 +135,40 @@ export class ModalComponent implements OnInit {
           console.log('Status of ' + this.data['action'] + ' is' + res);
         },
           (err) => {
-        //    this.setLoader.setLoaderFlag.next(false);
             console.log(err, 'error');
-            if (err.error.text === 'Started Successfully'){
-            this.intervalId = setInterval(this.checkStatus.bind(this), 10000);
+            if (err.error.text === 'Started Successfully') {
+              this.intervalId = setInterval(this.checkStatus.bind(this), 20000);
             }
 
-        });
+          });
     } else if (this.data.action === 'publish') {
       this.publishFramework();
     } else if (this.data.action === 'download') {
       this.downloadExcel();
-    } else if(this.data.action === 'setdefaultframework'){
+    } else if (this.data.action === 'setdefaultframework') {
       this.setDefaultFramework();
     } else {
       this.mandatoryfields = true;
       console.log('All mandatory inputs are not filled');
     }
   }
+
   sendReqForDelete() {
     if (this.typeOfItem === 'category') {
+      this.onNoClick();
+      this.beforeResponseMessage('Deletion of category started successfully');
       this.todeleteData.deleteItem({ type: this.typeOfItem, fwCode: this.fwcode, catgCode: this.codeOfItem })
         .subscribe((res) => {
           console.log('Delete category response', res);
         },
           (err) => {
             console.log('Delete category error', err);
-            this.afterResponseMessage(err);
+            this.afterResponseMessage(err, 'Deletion of category ');
           });
     } else {
       // delete terms in loop
+      this.onNoClick();
+      this.beforeResponseMessage('Deletion of terms started successfully');
       this.subTermsToDelete.push(this.codeOfItem);
       this.initiateDeleteSequence((deleteLog) => {
         console.log('delete log is ', deleteLog);
@@ -132,11 +176,16 @@ export class ModalComponent implements OnInit {
     }
   }
   publishFramework() {
-    if (this.code === '' || this.code === undefined) {
+    if (this.fwcode === '' || this.fwcode === undefined) {
       // this.publishStatus = 3;
       return;
     }
-    this.fwPublishService.publishFramework(this.code).subscribe((res) => {
+    this.onNoClick();
+    const uuidv1 = require('uuid/v1');
+    const pid = uuidv1();
+    this.updateProcessIdArray(pid);
+    this.beforeResponseMessage('Publish framework started successfully');
+    this.fwPublishService.publishFramework(this.fwcode, pid).subscribe((res) => {
       if (res === null || res === undefined) {
         console.log('In response got ', res);
         return;
@@ -149,23 +198,26 @@ export class ModalComponent implements OnInit {
       }
     }, (error) => {
       console.log('error catched ', error);
-     this.afterResponseMessage(error);
+      this.afterResponseMessage(error, 'Publishing Framework ');
     });
   }
   downloadExcel() {
-    console.log(this.code);
-    if (this.code === null || this.code === '') {
+    console.log(this.fwcode);
+    if (this.fwcode === null || this.fwcode === '') {
       return;
     }
-    this.setLoader.setLoaderFlag.next(true);
-    this.exportExcel.exportExcel(this.code).subscribe(
+    const uuidv1 = require('uuid/v1');
+    const pid = uuidv1();
+    this.updateProcessIdArray(pid);
+    this.onNoClick();
+    this.beforeResponseMessage('Downloading Excel started successfully');
+    this.exportExcel.exportExcel(this.fwcode, pid).subscribe(
       (res) => {
-        this.setLoader.setLoaderFlag.next(false);
-        this.dialogRef.close();
         if (res === null || res === undefined) {
           console.log('In response got ', res);
           return;
         }
+        this.afterResponseMessage('successful', 'Downloading excel ');
         const binaryData = [];
         binaryData.push(res);
         const blob = new Blob((binaryData), { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
@@ -178,25 +230,26 @@ export class ModalComponent implements OnInit {
       },
       (error) => {
         console.log(error);
-        this.setLoader.setLoaderFlag.next(false);
+        this.afterResponseMessage('failed', 'Downloading Excel ');
       });
 
   }
   setDefaultFramework() {
-    this.setLoader.setLoaderFlag.next(true);
-        this.setDefault.setFramework({fwCode : this.code , rootorgId : this.rootorgId}).subscribe
-        ((res) => {
-          this.setLoader.setLoaderFlag.next(false);
-
-        },
+    this.onNoClick();
+    this.beforeResponseMessage('Setting default framework started successfully');
+    const uuidv1 = require('uuid/v1');
+    const processId = uuidv1();
+    this.updateProcessIdArray(processId);
+    this.setDefault.setFramework({ fwCode: this.fwcode, rootorgId: this.rootorgId, pid: processId }).subscribe
+      ((res) => {
+      },
         (err) => {
-          this.setLoader.setLoaderFlag.next(false);
-           this.afterResponseMessage(err);
+          this.afterResponseMessage(err, 'Setting Default Frammework ');
         });
   }
   initiateDeleteSequence(deletedCB) {
     const deleteLog = {
-      totalRequests: this.subTermsToDelete.length - 1,
+      totalRequests: this.subTermsToDelete.length,
       requestsFailed: 0,
     };
 
@@ -211,6 +264,8 @@ export class ModalComponent implements OnInit {
 
           if (deleteLog.totalRequests === 0) {
             // requests finished
+            this.afterResponseMessage('successful', 'Deletion process of term/terms ');
+
             deletedCB(deleteLog);
           }
         },
@@ -226,9 +281,7 @@ export class ModalComponent implements OnInit {
             if (deleteLog.totalRequests === 0) {
               // requests finished
               this.termsdeletionProcess = true;
-              setTimeout( ( ) => {
-                this.onNoClick();
-               }, 3000);
+              this.afterResponseMessage('successful', 'Deletion process of term/terms ');
               deletedCB(deleteLog);
             }
           });
@@ -251,7 +304,7 @@ export class ModalComponent implements OnInit {
     this.select();
   }
   select() {
-    this.selectedAll = this.children.every(function ( item2: any ) {
+    this.selectedAll = this.children.every(function (item2: any) {
       return item2.selected === true;
     });
   }
@@ -296,62 +349,87 @@ export class ModalComponent implements OnInit {
         (err) => {
           completedReq = completedReq + 1;
           if (completedReq === totalreq) {
-              CB('');
+            CB('');
           }
         });
     }
 
   }
   checkuncheckAll(event) {
-      for (let i = 0; i < this.children.length; i++) {
-        this.subTermsToDelete.push((this.children[i]['identifier'].split('_'))[2]);
-        this.children[i].selected = this.selectedAll;
-      }
+    for (let i = 0; i < this.children.length; i++) {
+      this.subTermsToDelete.push((this.children[i]['identifier'].split('_'))[2]);
+      this.children[i].selected = this.selectedAll;
+    }
     if (event.target.checked === false) {
       const temp = this.subTermsToDelete[0];
       this.subTermsToDelete = [];
     }
   }
-  afterResponseMessage(res){
-    if (res.error.text === 'successful' || res === 'successful') {
-      //  this.publishStatus = 1;
-      this.successRes = true;
-      setTimeout( ( ) => {
-       this.onNoClick();
-      }, 2000);
-    } else if (res.error.text !== 'false' || res !== 'false') {
-      //  this.publishStatus = 2;
-      this.failureRes = true;
-      setTimeout( ( ) => {
-        this.onNoClick();
-       }, 2000);
+  afterResponseMessage(res, message) {
+    const config = new MatSnackBarConfig();
+    config.horizontalPosition = 'center';
+    config.verticalPosition = 'top';
+    config.duration = 5000;
+    if (res === 'successful' || res.error.text === 'successful') {
+      this.snackBar.open(message + 'successful', 'Close', config);
+    } else if (res !== 'false' || res.error.text !== 'false') {
+      this.snackBar.open(message + 'failed', 'Close', config);
+
     }
   }
-
+  beforeResponseMessage(message) {
+    const config = new MatSnackBarConfig();
+    config.horizontalPosition = 'center';
+    config.verticalPosition = 'top';
+    config.duration = 3000;
+    this.snackBar.open(message, 'Close', config);
+  }
   checkStatus() {
-    this.getStatus.retrieveStatus().subscribe( (res) => {
-     console.log('Response', res);
-     if (res === 'failed') {
-       clearInterval(this.intervalId);
-       console.log('Request failed', res);
-      this.setLoader.setLoaderFlag.next(false);
-      this.afterResponseMessage(res);
-     } else if (res === 'successful') {
-      clearInterval(this.intervalId);
-      console.log('Request successful', res);
-     this.setLoader.setLoaderFlag.next(false);
-     this.afterResponseMessage(res);
-    } else if (res === 'false') {
-      console.log('Request is in process');
-    }
+    this.getStatus.retrieveStatus().subscribe((res) => {
+      console.log('Response', res);
+      if (res[this.code] === 'failed') {
+        clearInterval(this.intervalId);
+        console.log('Request failed', res);
+        if (this.data['action'] === 'create') {
+          this.afterResponseMessage(res[this.code], 'Framework creation ');
+        }
+        if (this.data['action'] === 'update') {
+          this.afterResponseMessage(res[this.code], 'Framework updation ');
+        }
+      } else if (res[this.code] === 'successful') {
+        clearInterval(this.intervalId);
+        console.log('Request successful', res);
+        if (this.data['action'] === 'create') {
+          this.afterResponseMessage(res[this.code], 'Framework creation ');
+        }
+        if (this.data['action'] === 'update') {
+          this.afterResponseMessage(res[this.code], 'Framework updation ');
+        }
+      } else if (res[this.code] === 'false') {
+        console.log('Request is in process ');
+      }
     },
-    (err) => {
-      clearInterval(this.intervalId);
+      (err) => {
+        clearInterval(this.intervalId);
+        if (this.data['action'] === 'create') {
+          this.afterResponseMessage(err, 'Framework creation ');
 
-      this.setLoader.setLoaderFlag.next(false);
-     this.afterResponseMessage(err);
-    
-      console.log('Error', err);
-    });
+        }
+        if (this.data['action'] === 'update') {
+          this.afterResponseMessage(err, 'Framework updation ');
+
+        }
+
+        console.log('Error', err);
+      });
+  }
+  updateProcessIdArray(pid) {
+    const newData = this.processIdData.processIdArray.value;
+    newData.push({ 'processId': pid, 'startTime': this.getTime(), 'frameworkcode': this.code ? this.code : this.fwcode });
+    this.processIdData.processIdArray.next(newData);
+  }
+  getTime() {
+    const x = new Date();
+    return x.getDate() + '-' + x.getMonth() + '-' + x.getFullYear() + '   ' + x.getHours() + ':' + x.getMinutes() + ':' + x.getSeconds()
   }
 }

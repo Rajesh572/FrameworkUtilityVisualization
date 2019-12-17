@@ -17,9 +17,9 @@ export class CategoriesComponent implements OnInit {
   terms: any;
   catgCode: any;
   isSingleClick = true;
-selectedIndex: any;
-flag = true;
-@Output()someEvent = new EventEmitter<string>();
+  selectedIndex: any;
+  flag = true;
+  @Output() someEvent = new EventEmitter<string>();
   constructor(public fwRead: FWreadService, public fwCatgRead: FWCatgReadService, public compRef: ComponentRefService,
     public todeleteData: DeleteDataService, public setLoader: SetLoaderService) { }
 
@@ -31,27 +31,29 @@ flag = true;
       if (!!this.categories && this.categories.length > 0) {
         this.catgCode = (this.categories[0]);
         this.readCategory(this.catgCode, 0);
-    }
-      });
+      }
+    });
   }
   readCategory(catg, index) {
-    this.compRef.ref.next({comp: CategoriesComponent});
-      this.someEvent.next('');
-      this.selectedIndex = index;
-      if (!this.flag) {
-        this.setLoader.setLoaderFlag.next(true);
+    this.compRef.ref.next({ comp: CategoriesComponent });
+    this.someEvent.next('');
+    this.selectedIndex = index;
+    if (!this.flag) {
+      this.setLoader.setLoaderFlag.next(true);
+    }
+    this.catgCode = ((catg['identifier']).split('_'))[1];
+    this.fwCatgRead.readCategory(this.frameworkCode, this.catgCode).subscribe((data) => {
+      console.log(data['result'].category.terms);
+      this.flag = false;
+      if (data['result'].category.terms.length > 0) {
+        this.fwCatgRead.fwResponse.next({
+          frameworkCode: this.frameworkCode, categoryCode: this.catgCode,
+          fwReadBody: data['result'].category.terms
+        });
+      } else {
+        this.setLoader.setLoaderFlag.next(false);
       }
-      this.catgCode = ((catg['identifier']).split('_'))[1];
-      this.fwCatgRead.readCategory(this.frameworkCode, this.catgCode).subscribe((data) => {
-  console.log(data['result'].category.terms);
-  this.flag = false;
-  if (data['result'].category.terms.length > 0) {
-  this.fwCatgRead.fwResponse.next({frameworkCode: this.frameworkCode, categoryCode: this.catgCode,
-    fwReadBody: data['result'].category.terms});
-  } else {
-    this.setLoader.setLoaderFlag.next(false);
-  }
-      },
+    },
       (error) => {
         this.setLoader.setLoaderFlag.next(false);
 
@@ -63,8 +65,8 @@ flag = true;
     this.isSingleClick = false;
     console.log('To delete ', catg);
   }
-  dragEnd(event,item) {
-    console.log('event' , event , item);
-    this.todeleteData.data.next({type : 'category' , item : item});
+  dragEnd(event, item) {
+    console.log('event', event, item);
+    this.todeleteData.data.next({ type: 'category', item: item });
   }
 }

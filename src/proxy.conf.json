@@ -34,5 +34,10 @@
         "source": false,
         "changeOrigin": true,
         "target":"http://localhost:9000"
+    },
+    "/getReport":{
+        "source": false,
+        "changeOrigin": true,
+        "target":"http://localhost:9000"
     }
 }

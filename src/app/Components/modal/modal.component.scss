@@ -1,5 +1,5 @@
 h4{
-    text-align: left;
+    text-align: center;
     font-weight: bold;
 }
 .inputfields{
@@ -89,4 +89,7 @@ input.inputfield{    width: 70%;
     left: 0;
     top: 0;
     opacity: 0;
+  }
+  ::ng-deep snack-bar-container {
+    background: red;
   }

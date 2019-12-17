@@ -8,7 +8,7 @@ export class DownloadExcelService {
 
   constructor(public http: HttpClient) { }
 
-  exportExcel(fwCode): Observable<any> {
+  exportExcel(fwCode,pid): Observable<any> {
     return new Observable(obs => {
       const oReq = new XMLHttpRequest();
       oReq.open('POST', '/downloadExcel', true);
@@ -19,7 +19,7 @@ export class DownloadExcelService {
         const byteArray = new Uint8Array(arrayBuffer);
         obs.next(byteArray);
       };
-      const body = JSON.stringify({framework: fwCode});
+      const body = JSON.stringify({framework: fwCode, pid: pid});
       oReq.send(body);
     });
 }

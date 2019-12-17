@@ -115,6 +115,9 @@ export class DetailsComponent implements OnInit {
   publishFramework() {
     this.openModal('publish');
   }
+  checkprocessStatus() {
+    this.openModal('status', '850px', '650px');
+  }
   setDefaultFramework() {
     this.openModal('setdefaultframework');
   }
@@ -189,10 +192,10 @@ this.clearComponents('clearall');
   helpAndSupport(): void {
     this.openModal('help');
   }
-  openModal(action) {
+  openModal(action, width?, height?) {
     const dialogRef = this.dialog.open(ModalComponent, {
-      width: '450px',
-      maxHeight: '500px',
+      width: width ? width : '550px',
+      maxHeight: height ? height : '500px',
       data: { action : action}
     });
 
