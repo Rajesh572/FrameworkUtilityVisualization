@@ -12,6 +12,8 @@ import { SharedModule } from '../shared/shared.module';
 import { FormsModule } from '@angular/forms';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { DragAndDropModule } from 'angular-draggable-droppable';
+import { ActivemenuDirective } from './directives/activemenu.directive';
+import { OnHoverDirective } from './directives/on-hover.directive';
 @NgModule({
   declarations: [
     HeaderComponent,
@@ -21,7 +23,9 @@ import { DragAndDropModule } from 'angular-draggable-droppable';
     SubtermsComponent,
     AssociationsComponent,
     SubtermsassociationComponent,
-    SideBarComponent
+    SideBarComponent,
+    ActivemenuDirective,
+    OnHoverDirective
   ],
   imports: [
     CommonModule,
