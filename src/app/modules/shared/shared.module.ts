@@ -6,10 +6,13 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import {MatInputModule} from '@angular/material/input';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { ActivemenuDirective } from './directives/activemenu.directive';
 
 @NgModule({
   declarations: [
-    ModalComponent],
+    ModalComponent,
+  
+    ActivemenuDirective,],
   imports: [
     CommonModule,
     FormsModule,
@@ -18,6 +21,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
     MatInputModule,
     MatSnackBarModule
   ],
-  entryComponents: [ModalComponent]
+  entryComponents: [ModalComponent],
+  exports: [ActivemenuDirective]
 })
 export class SharedModule { }
