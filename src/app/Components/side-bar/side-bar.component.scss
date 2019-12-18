@@ -1,0 +1,31 @@
+button.sidebarbtn{
+    padding: 0;
+    padding-top: 8px;
+    margin: 0 0 0 0;
+    background: none;
+    border: none;
+    width: 100%;
+    color : white;
+    
+}
+.selected {
+    background: #fff !important;
+    color: #333 !important;
+}
+.utilitylogo{
+    text-align: center;
+    min-height: 5rem;
+    color: white;
+    margin-top: 2px;
+}
+.utilityfirstname{
+    font-size: 32px;
+    font-weight: bold;
+}
+button.sidebarbtn:hover{
+    background-color: #fbf5f3;
+    color: #333;
+  }
+  i{
+    font-size: 1.6rem;
+}

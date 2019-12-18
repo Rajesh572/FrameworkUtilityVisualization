@@ -17,6 +17,6 @@ export class SetDefaultService {
     };
 
 
- return this.http.post<any>('/setdefaultframework', {fwCode:  data['fwCode'], rootorgId: data['rootorgId']}, httpOptions);
+ return this.http.post<any>('/setdefaultframework', {fwCode:  data['fwCode'], rootorgId: data['rootorgId'], pid: data['pid']}, httpOptions);
   }
 }

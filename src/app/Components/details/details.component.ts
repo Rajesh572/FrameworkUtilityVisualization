@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewContainerRef, ComponentFactoryResolver, SystemJsNgModuleLoader } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewContainerRef, ComponentFactoryResolver, SystemJsNgModuleLoader, ErrorHandler } from '@angular/core';
 import { FWreadService } from 'src/app/Services/FWread/fwread.service';
 import { FWCatgReadService } from 'src/app/Services/FWCatgRead/fwcatg-read.service';
 import { FWTermsReadService } from 'src/app/Services/FWTermsRead/fwterms-read.service';
@@ -62,6 +62,9 @@ export class DetailsComponent implements OnInit {
         component.instance['subtermshierachicalData'] = data2['childData'];
         console.log('componentsOfSubterms array', this.componentsOfSubterms);
       }
+    },
+    (err) => {
+      console.log(err);
     });
     this.numberOfDivs.hierachicalAssociation.subscribe((data) => {
 
@@ -76,59 +79,16 @@ export class DetailsComponent implements OnInit {
        // this.count2 = this.count2 + 1;
         component.instance['currentIndex'] = this.componentsOfSubterms.length;
         component.instance['subtermshierachicalData'] = data['associatedData'];
+        component.instance['currentIndex'] = data['index'];
         console.log('componentsOfSubtermsAssociation array', this.componentsOfSubtermsAssociation);
       }
+    },
+    (err) => {
+      console.log(err);
     });
   }
   /* }); */
 
-  readFramework() {
-    this.setLoader.setLoaderFlag.next(true);
-    this.clearFramework();
-    console.log(this.fwcode);
-    // this.setLoader.setLoaderFlag.next(true);
-    this.fwreadService.readFramework(this.fwcode).subscribe((data) => {
-      //   this.setLoader.setLoaderFlag.next(false);
-      this.categories = data['result'].framework.categories;
-      if (this.categories.length > 0){
-        this.fwreadService.fwResponse.next({ frameworkCode: this.fwcode, fwReadBody: this.categories });
-
-      } else{
-           this.setLoader.setLoaderFlag.next(false);
-      }
-    },
-      (error) => {
-        this.setLoader.setLoaderFlag.next(false);
-        this.error = error;
-        this.flag = true;
-      }
-    );
-    this.fwTermService.fwTermBody.subscribe((data) => {
-      if (data['children']) {
-        this.subterms = data['children'];
-      } else {
-        this.subterms = [];
-      }
-    });
-  }
-  publishFramework() {
-    this.openModal('publish');
-  }
-  setDefaultFramework() {
-    this.openModal('setdefaultframework');
-  }
-  clearFramework() {
-    this.flag = false;
-    this.publishStatus = 0;
-    // this.numberOfDivs.numberOfSubtermAssociationDivs.next(1);
-    //  this.numberOfDivs.compClass.next('');
-    this.fwreadService.fwResponse.next('');
-    this.fwCatgService.fwResponse.next('');
-    this.fwTermService.fwTermBody.next('');
-    this.fwTermService.fwSubTermBody.next('');
-this.clearComponents('clearall');
-
-  }
   clearComponents(event?) {
     let index = 0;
     let deletedComponents = [];
@@ -171,27 +131,14 @@ this.clearComponents('clearall');
     this.componentsOfSubterms = [];
 
   }
-  downloadExcel() {
-    this.openModal('download');
-  }
   drag(dragEvent, content) {
     console.log(dragEvent);
     console.log(content);
   }
-  create(): void {
-    this.openModal('create');
-  }
-
-  update(): void {
-    this.openModal('update');
-  }
-  helpAndSupport(): void {
-    this.openModal('help');
-  }
-  openModal(action) {
+  openModal(action, width?, height?) {
     const dialogRef = this.dialog.open(ModalComponent, {
-      width: '450px',
-      maxHeight: '500px',
+      width: width ? width : '550px',
+      maxHeight: height ? height : '500px',
       data: { action : action}
     });
 
@@ -202,5 +149,45 @@ this.clearComponents('clearall');
   }
   onDrop({ dropData }: DropEvent<string>): void {
      this.openModal('delete');
+  }
+  readFramework() {
+    this.setLoader.setLoaderFlag.next(true);
+    this.clearFramework();
+    console.log(this.fwcode);
+    // this.setLoader.setLoaderFlag.next(true);
+    this.fwreadService.readFramework(this.fwcode).subscribe((data) => {
+      //   this.setLoader.setLoaderFlag.next(false);
+      this.categories = data['result'].framework.categories;
+      if (this.categories.length > 0){
+        this.fwreadService.fwResponse.next({ frameworkCode: this.fwcode, fwReadBody: this.categories });
+
+      } else {
+           this.setLoader.setLoaderFlag.next(false);
+      }
+    },
+      (error) => {
+        this.setLoader.setLoaderFlag.next(false);
+        this.error = error;
+        this.flag = true;
+      }
+    );
+    this.fwTermService.fwTermBody.subscribe((data) => {
+      if (data['children']) {
+        this.subterms = data['children'];
+      } else {
+        this.subterms = [];
+      }
+    });
+  }
+  clearFramework() {
+    this.flag = false;
+    this.publishStatus = 0;
+    // this.numberOfDivs.numberOfSubtermAssociationDivs.next(1);
+    //  this.numberOfDivs.compClass.next('');
+    this.fwreadService.fwResponse.next('');
+    this.fwCatgService.fwResponse.next('');
+    this.fwTermService.fwTermBody.next('');
+    this.fwTermService.fwSubTermBody.next('');
+    this.clearComponents('clearall');
   }
 }

@@ -12,7 +12,7 @@ export class PublishFrameworkService {
 
   constructor(public http: HttpClient) {this.json = jsondata['default'];}
 
-  publishFramework(fwCode): Observable<any> {
+  publishFramework(fwCode, pid): Observable<any> {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
@@ -20,6 +20,6 @@ export class PublishFrameworkService {
     };
 
 
- return this.http.post<any>('/framework/publish', {framework:  fwCode, channel: this.json.channel_id}, httpOptions);
+ return this.http.post<any>('/framework/publish', {framework:  fwCode, channel: this.json.channel_id, pid: pid}, httpOptions);
   }
 }

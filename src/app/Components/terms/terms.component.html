@@ -8,7 +8,7 @@
       <ul >
         <li *ngFor="let term of terms;let i = index" (click)=readTerm(term,i) mwlDraggable (dragEnd)="dragEnd($event,term)">
 
-          <p style="margin-top: 10px;padding-left: 10px;" *ngIf="flag === true" [ngClass]="{'highlight' : (selectedIndex == i)}">
+          <p  *ngIf="flag === true" [ngClass]="{'highlight' : (selectedIndex == i)}">
 
 
             {{term.name}} </p>

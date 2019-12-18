@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule} from '@angular/core';
+import { NgModule, ErrorHandler, Injectable} from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -20,6 +20,11 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import { DragAndDropModule } from 'angular-draggable-droppable';
 import {MatInputModule} from '@angular/material/input';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { ActivemenuDirective } from './directives/activemenu.directive';
+import { SideBarComponent } from './Components/side-bar/side-bar.component';
+import { ErrorHandlerService } from './Services/errorHandler/error-handler.service';
+import { CustomHandler } from './custom-handler';
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,7 +35,9 @@ import {MatInputModule} from '@angular/material/input';
     SubtermsComponent,
     AssociationsComponent,
     SubtermsassociationComponent,
-    ModalComponent
+    ModalComponent,
+    ActivemenuDirective,
+    SideBarComponent
   ],
   imports: [
     BrowserModule,
@@ -43,9 +50,15 @@ import {MatInputModule} from '@angular/material/input';
     MatDialogModule,
     MatButtonModule,
     DragAndDropModule,
-    MatInputModule
+    MatInputModule,
+    MatSnackBarModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: ErrorHandler,
+      useClass: CustomHandler,
+     },
+  ],
   bootstrap: [AppComponent],
   entryComponents: [SubtermsComponent, SubtermsassociationComponent, ModalComponent]
 })

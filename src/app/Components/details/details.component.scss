@@ -1,6 +1,18 @@
-form{
+
+
+.fa-trash{
+    color: grey;
+}
+textarea:focus, input:focus{
+    outline: none;
+}form{
     padding-top: 27px;
     margin-left: 8vw;
+}
+.inputfield{
+    float: left;
+    margin-left : 24px;
+    padding-right: 60px;
 }
 input{
     border: 1px solid lightgray;
@@ -9,12 +21,36 @@ input{
     height: 6vh;
     padding-left: 14px;
 }
-.fa-trash{
-    color: grey;
+.buttons{
+    float: left;
+
 }
-textarea:focus, input:focus{
-    outline: none;
+
+.btn{
+    margin-left: 10px;
+    margin-right: 10px;
+    
 }
+button.retrieve,button.clear{
+    color: white;
+    border-radius: 23px;
+  }
+  button.retrieve{
+      
+    background-color: #9D7CF3;
+    margin-right: 1rem;
+  }
+  button.clear{
+ background-color:#aba8a8
+  }
+  .btn {
+    color: #8c8a8a;
+    font-size: 15px;
+  }
+  
+  button.btn:hover{
+      cursor: pointer;
+  }
 
 .allDetails{
     display: flex;
@@ -26,7 +62,7 @@ textarea:focus, input:focus{
     .flex-wrapper-column {
         flex: 1;
         min-height: 38vh;
-        padding: 0 4px;
+        padding: 0 0;
 
         ::ng-deep .card-container {
             max-width: 45vh;
@@ -53,7 +89,7 @@ textarea:focus, input:focus{
    ::ng-deep .flex-wrapper-column {
         flex: 1;
         min-height: 38vh;
-        padding: 0 0;
+        padding: 0 4px;
 
         ::ng-deep .card-container {
             max-width: 40vh;
@@ -144,30 +180,8 @@ table, th, td {
         color:transparent;
     }
   }
- button.retrieve,button.clear{
-    color: white;
-    border-radius: 23px;
-  }
-  button.retrieve{
-      
-    background-color: #9D7CF3;
-    margin-right: 1rem;
-  }
-  button.clear{
- background-color:#aba8a8
-  }
-  .btn {
-    color: #8c8a8a;
-    font-size: 15px;
-  }
+ 
   
-  button.btn:hover{
-      cursor: pointer;
-  }
-  button.sidebarbtn:hover{
-    background-color: #fbf5f3;
-    color: #333;
-  }
   
   span.cstmbtn{
     position: absolute;
@@ -212,25 +226,7 @@ table, th, td {
       background-color: #9D7CF3;
       min-height: 100%;
   }
-button.sidebarbtn{
-    padding: 0;
-    padding-top: 10px;
-    margin: 0 0 0 0;
-    background-color: transparent;
-    border: none;
-    width: 100%;
-    color : white;
-}
-.utilitylogo{
-    text-align: center;
-    min-height: 5rem;
-    color: white;
-    margin-top: 2px;
-}
-.utilityfirstname{
-    font-size: 32px;
-    font-weight: bold;
-}
+
 .droparea{
     min-height: 14.4%;
     max-height: 14.4%;
