@@ -1,6 +1,5 @@
 import { Injectable, ErrorHandler } from "@angular/core";
-
-import { ErrorHandlerService } from "./Services/errorHandler/error-handler.service";
+import { ErrorHandlerService } from "./modules/shared/Services/errorHandler/error-handler.service";
 
 @Injectable()
 export class CustomHandler implements ErrorHandler {
