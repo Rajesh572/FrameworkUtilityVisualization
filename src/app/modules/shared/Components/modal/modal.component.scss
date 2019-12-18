@@ -93,3 +93,17 @@ input.inputfield{    width: 70%;
   ::ng-deep snack-bar-container {
     background: red;
   }
+.labelupload{
+  max-width: 100%;
+  color: #353131;
+    border: 2px solid currentColor;
+    border-radius: 5px;
+    font-size: 0.87rem;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+    display: inline-block;
+    overflow: hidden;
+    padding: 0.625rem 1.25rem;
+}

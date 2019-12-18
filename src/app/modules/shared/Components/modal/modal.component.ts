@@ -42,6 +42,7 @@ export class ModalComponent implements OnInit {
   processFound = [];
   termsdeletionProcess = false;
   mandatoryfields: boolean;
+  filename: any;
   constructor(public dialogRef: MatDialogRef<ModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData, public createupdate: CreateUpdateReqService,
     public todeleteData: DeleteDataService, public termRead: FWTermsReadService, public fwPublishService: PublishFrameworkService,
@@ -334,6 +335,7 @@ export class ModalComponent implements OnInit {
   }
 
   handleUpload(e) {
+    this.filename = e.target.files[0].name;
     this.selectedFile = <File>e.target.files[0];
   }
   toggleEditable(event, item) {

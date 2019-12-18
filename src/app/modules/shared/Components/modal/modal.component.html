@@ -31,8 +31,10 @@
       <!-- <input type="file" name="myfile" id='myUploadInput' (change)="handleUpload($event)" />
  -->
  <div class="upload-btn-wrapper">
-    <button class="btn">Upload</button>
+    <!-- <button class="btn">Upload</button> -->
+
     <input type="file" name="myfile" (change)="handleUpload($event)"/>
+    <label class="labelupload"><span>{{filename ? filename : 'Upload'}}</span></label>
   </div>
 
 
