@@ -40,7 +40,8 @@ export class SubtermsComponent implements OnInit, OnDestroy {
   readSubTerm(subterm, index) {
     this.compRef.ref.next({ comp: this.reference });
     this.selectedIndex = index;
-    subterm = ((subterm['identifier']).split('_'))[2];
+    const subtermsplit= ((subterm['identifier']).split('_')); 
+    subterm = subtermsplit[subtermsplit.length - 1];
     const req = this.fwTermRead.readSubTerms(this.fwcode, this.catgCode, subterm).subscribe((data) => {
       if (data['result'].term['children'] && data['result'].term['children'].length > 0) {
         this.subtermsdivs.hierachicalData.next({ comp: SubtermsComponent, childData: data['result'].term['children'] });

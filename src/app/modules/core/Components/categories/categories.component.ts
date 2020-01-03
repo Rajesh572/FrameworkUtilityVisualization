@@ -48,7 +48,8 @@ export class CategoriesComponent implements OnInit , OnDestroy {
     if (!this.flag) {
       this.setLoader.setLoaderFlag.next(true);
     }
-    this.catgCode = ((catg['identifier']).split('_'))[1];
+    const catgsplit = catg['identifier'].split('_');
+    this.catgCode = catgsplit[catgsplit.length-1];
    const req = this.fwCatgRead.readCategory(this.frameworkCode, this.catgCode).subscribe((data) => {
       console.log(data['result'].category.terms);
       this.flag = false;

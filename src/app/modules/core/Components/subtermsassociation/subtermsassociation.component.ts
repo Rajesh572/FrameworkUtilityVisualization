@@ -11,6 +11,7 @@ import { SetLoaderService } from 'src/app/modules/shared/Services/setLoader/set-
 export class SubtermsassociationComponent implements OnInit, OnDestroy {
   subtermsAssociations = [];
   categorycode: any;
+  fwCode = '';
   subtermshierachicalData = [];
   currentIndex = 0;
   flag: boolean;
@@ -23,9 +24,15 @@ export class SubtermsassociationComponent implements OnInit, OnDestroy {
         this.categorycode = data['identifier'];
         this.flag = false;
         this.categorycode = this.categorycode.split('_');
-        this.categorycode = this.categorycode[1];
+        for (let j = 0 ; j < this.categorycode.length ; j++) {
+           this.fwCode = this.fwCode + this.categorycode[j] ;
+           if (! (j = this.categorycode.length - 1)){
+               this.fwCode = this.fwCode + '_';
+           }
+        }
+        this.categorycode = this.categorycode[this.categorycode.length - 1];
         this.subtermsAssociations = data['associations'];
-        this.liveTerms.findLiveTerms(this.subtermsAssociations).subscribe( (res) => {
+        this.liveTerms.findLiveTerms(this.subtermsAssociations , this.fwCode).subscribe( (res) => {
           this.subtermsAssociations = [];
           this.subtermsAssociations = res;
           this.flag = true;
@@ -33,7 +40,7 @@ export class SubtermsassociationComponent implements OnInit, OnDestroy {
           for ( let i = 0; i < this.subtermsAssociations.length; i++) {
             this.categorycode = this.subtermsAssociations[i]['identifier'];
             this.categorycode = this.categorycode.split('_');
-            this.subtermsAssociations[i]['category'] = this.categorycode[1];
+            this.subtermsAssociations[i]['category'] = this.categorycode[this.categorycode.length - 1];
           }
         },
         (err) => {
@@ -52,7 +59,7 @@ export class SubtermsassociationComponent implements OnInit, OnDestroy {
       for ( let i = 0; i < this.subtermshierachicalData.length; i++) {
         this.categorycode = this.subtermshierachicalData[i]['identifier'];
         this.categorycode = this.categorycode.split('_');
-        this.subtermshierachicalData[i]['category'] = this.categorycode[1];
+        this.subtermshierachicalData[i]['category'] = this.categorycode[this.categorycode.length - 1];
       }
       this.flag = true;
     }

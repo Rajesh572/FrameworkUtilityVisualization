@@ -9,13 +9,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class LiveTermsService {
   constructor(public http: HttpClient) { }
 
-  findLiveTerms( terms): Observable<any> {
+  findLiveTerms( terms , fwCode): Observable<any> {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
       })
     };
-    return this.http.post('/getLiveTerms', { terms : terms , action : 3}, httpOptions);
+    return this.http.post('/getLiveTerms', { terms : terms , action : 3 , fwCode : fwCode}, httpOptions);
 
     }
   }

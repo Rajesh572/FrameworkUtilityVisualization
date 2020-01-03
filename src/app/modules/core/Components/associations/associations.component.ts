@@ -12,7 +12,7 @@ import { SetLoaderService } from 'src/app/modules/shared/Services/setLoader/set-
 export class AssociationsComponent implements OnInit, OnDestroy {
   associatedTerms: any;
   categorycode: any;
-  fwCode: any;
+  fwCode = '';
   flag: boolean;
   reqArray = [];
   constructor(public fwTermRead: FWTermsReadService, public liveTerms: LiveTermsService,
@@ -27,14 +27,23 @@ export class AssociationsComponent implements OnInit, OnDestroy {
         */
         this.associatedTerms = data['associations'];
         this.flag = false;
-      const req2 =  this.liveTerms.findLiveTerms(this.associatedTerms).subscribe( (res) => {
+      const req2 =  this.liveTerms.findLiveTerms(this.associatedTerms, this.fwCode).subscribe( (res) => {
             this.associatedTerms = [];
             this.associatedTerms = res;
             let c = 0;
             for ( let i = 0; i < this.associatedTerms.length; i++) {
               this.categorycode = this.associatedTerms[i]['identifier'];
               this.categorycode = this.categorycode.split('_');
+              if (this.categorycode.length > 3) {
+                    for ( let j = 0 ; j < this.categorycode.length - 2 ; j++) {
+                      this.fwCode = this.fwCode + this.categorycode[i];
+                      if (! (j = this.categorycode.length - 2)) {
+                        this.fwCode = this.fwCode + '_';
+                    }
+                    }
+              }  else {
               this.fwCode = this.categorycode[0];
+              }
               this.associatedTerms[i]['category'] = this.categorycode[1];
               this.flag = true;
               c = c + 1;

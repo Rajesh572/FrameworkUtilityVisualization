@@ -41,14 +41,17 @@ export class TermsComponent implements OnInit, OnDestroy {
           this.termcode = (this.terms[0]);
           this.readTerm(this.termcode, 0);
         }); */
-        const req2 = this.liveTerms.findLiveTerms(t).
+        const req2 = this.liveTerms.findLiveTerms(t , this.fwcode).
           subscribe((res) => {
             if (res != null && res) {
               this.terms = [];
               this.terms = res;
               this.flag = true;
               this.termcode = (this.terms[0]);
-              this.readTerm(this.termcode, 0);
+              if (this.terms.length > 0){
+                this.readTerm(this.termcode, 0);
+
+              }
             }
             this.reqArray.push(req);
 
@@ -70,7 +73,8 @@ export class TermsComponent implements OnInit, OnDestroy {
     //   this.setLoader.setLoaderFlag.next(true);
     this.selectedIndex = index;
     console.log('Selected Index', this.selectedIndex);
-    term = ((term['identifier']).split('_'))[2];
+    const termsplit = ((term['identifier']).split('_'));
+    term = termsplit[termsplit.length-1];
     const req = this.fwTermRead.readTerms(this.fwcode, this.catgCode, term).
       subscribe((data) => {
         //     this.setLoader.setLoaderFlag.next(false);
